@@ -1,0 +1,729 @@
+/* ============================================================
+   FreshTrack — base styles, brand tokens, authentication.
+   Palette and typography follow the FreshTrack brand board.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap');
+
+:root {
+    /* Greens */
+    --green-900: #1b5e20;
+    --green-800: #2e7d32;
+    --green-600: #43a047;
+    --green-400: #66bb6a;
+    --green-200: #a5d6a7;
+
+    /* Neutrals */
+    --surface-mint: #f1f8f4;
+    --surface-green: #e8f5e9;
+    --surface-cream: #fffdf7;
+    --surface-grey: #f5f5f5;
+    --ink: #212121;
+
+    /* Derived */
+    --muted: #6b7a70;
+    --border: #e3ece6;
+    --white: #ffffff;
+    --danger: #b42318;
+    --danger-soft: #fef3f2;
+
+    --radius-sm: 10px;
+    --radius: 14px;
+    --radius-lg: 20px;
+
+    --shadow-sm: 0 1px 2px rgba(33, 33, 33, 0.04);
+    --shadow: 0 1px 2px rgba(33, 33, 33, 0.04),
+              0 8px 24px rgba(27, 94, 32, 0.07);
+
+    --font-heading: 'Poppins', 'Segoe UI', sans-serif;
+    --font-body: 'Inter', 'Segoe UI', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--ink);
+    background: var(--white);
+    -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    color: var(--green-900);
+}
+
+a {
+    color: var(--green-800);
+}
+
+/* Brand -------------------------------------------------- */
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    font-family: var(--font-heading);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: var(--green-900);
+}
+
+.brand-mark {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    background: var(--green-900);
+    color: var(--white);
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+/* Auth layout -------------------------------------------- */
+
+.auth-body {
+    height: 100vh;
+    overflow: hidden;
+    padding: 0;
+    background:
+        radial-gradient(
+            circle at 50% 30%,
+            var(--surface-mint) 0%,
+            var(--white) 60%
+        );
+}
+
+.auth-page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-width: 1340px;
+    margin: 0 auto;
+    padding: 22px 32px 0;
+}
+/* Fixed-height login page -------------------------------- */
+
+.auth-main {
+    min-height: 0;
+    overflow: hidden;
+}
+
+.auth-panel {
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+/* Top bar ------------------------------------------------ */
+
+.auth-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 44px;
+}
+
+.auth-identity {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.auth-wordmark {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 25px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    color: var(--green-900);
+    line-height: 1.2;
+}
+
+.auth-tagline {
+    display: block;
+    margin-top: 2px;
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--muted);
+}
+
+/* Compact fixed-height login ----------------------------- */
+
+.auth-top {
+    margin-bottom: 20px;
+}
+
+.auth-main {
+    min-height: 0;
+    padding-bottom: 20px;
+}
+
+.auth-panel {
+    padding: 24px;
+}
+
+.auth-panel h2 {
+    font-size: 20px;
+}
+
+.auth-subtitle {
+    margin: 4px 0 18px;
+    font-size: 13px;
+}
+
+.auth-panel .field {
+    margin-bottom: 13px;
+}
+
+.auth-footer {
+    margin-top: 16px;
+    padding-top: 15px;
+}
+
+.auth-bottom {
+    padding: 12px 0 14px;
+}
+
+.brand-logo-large {
+    width: 62px;
+    height: 62px;
+    border-radius: 17px;
+}
+
+.auth-pitch h1 {
+    font-size: 32px;
+}
+
+.auth-lead {
+    font-size: 14.5px;
+}
+
+/* Three-column body -------------------------------------- */
+
+.auth-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr 360px;
+    gap: 30px;
+    align-items: center;
+    flex: 1;
+    padding-bottom: 40px;
+}
+
+.auth-pitch h1 {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -1.1px;
+    color: var(--ink);
+}
+
+.auth-pitch .accent {
+    color: var(--green-800);
+}
+
+.auth-lead {
+    margin: 18px 0 0;
+    max-width: 480px;
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--muted);
+}
+
+.feature-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.feature-list strong {
+    display: block;
+    margin-bottom: 3px;
+    font-family: var(--font-heading);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--green-900);
+}
+
+.feature-list span span,
+.feature-list li > span:last-child {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+}
+
+/* Illustration ------------------------------------------- */
+
+.auth-visual {
+    display: grid;
+    place-items: center;
+}
+
+.auth-visual img {
+    width: 100%;
+    max-width: 460px;
+    height: auto;
+}
+
+/* Login card --------------------------------------------- */
+
+.auth-panel {
+    padding: 32px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    box-shadow: var(--shadow);
+}
+
+.auth-panel h2 {
+    font-size: 23px;
+    text-align: center;
+}
+
+.auth-subtitle {
+    margin: 5px 0 24px;
+    font-size: 13.5px;
+    color: var(--muted);
+    text-align: center;
+}
+
+.auth-footer {
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+    text-align: center;
+}
+
+.auth-footer a {
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Footer ------------------------------------------------- */
+
+.auth-bottom {
+    padding: 18px 0 22px;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--muted);
+}
+
+/* Responsive --------------------------------------------- */
+
+/* Responsive --------------------------------------------- */
+
+@media (max-width: 1180px) {
+    .auth-main {
+        grid-template-columns: 1fr 400px;
+    }
+
+    .auth-visual {
+        display: none;
+    }
+}
+
+@media (max-width: 880px) {
+    .auth-page {
+        padding: 20px 18px 0;
+    }
+
+    .auth-main {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .auth-pitch h1 {
+        font-size: 28px;
+    }
+
+    .field-row,
+    .role-choice {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Form elements ------------------------------------------ */
+
+.field {
+    margin-bottom: 10px;
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--white);
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--ink);
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #a8b5ad;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--green-600);
+    box-shadow: 0 0 0 3px var(--surface-green);
+}
+
+/* Role selection ----------------------------------------- */
+
+.role-choice {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.role-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    margin: 0;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-weight: 400;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.role-option:hover {
+    border-color: var(--green-200);
+}
+
+.role-option:has(input:checked) {
+    border-color: var(--green-600);
+    background: var(--surface-mint);
+}
+
+.role-option input {
+    margin-top: 3px;
+    flex-shrink: 0;
+    accent-color: var(--green-900);
+}
+
+.role-option span {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.role-option strong {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+/* Buttons ------------------------------------------------ */
+
+.button {
+    display: inline-block;
+    padding: 11px 20px;
+    border: 1px solid var(--green-900);
+    border-radius: var(--radius-sm);
+    background: var(--green-900);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.button:hover {
+    background: var(--green-800);
+    border-color: var(--green-800);
+}
+
+.button-outline {
+    background: var(--white);
+    color: var(--green-900);
+}
+
+.button-outline:hover {
+    background: var(--surface-mint);
+    color: var(--green-900);
+}
+
+.button-block {
+    width: 100%;
+    margin-top: 6px;
+}
+
+.button-small {
+    padding: 7px 13px;
+    font-size: 13px;
+}
+
+/* Alerts ------------------------------------------------- */
+
+.alert {
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+}
+
+.alert p + p {
+    margin-top: 4px;
+}
+
+.alert-error {
+    border: 1px solid #fecdca;
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+.alert-success {
+    border: 1px solid var(--green-200);
+    background: var(--surface-mint);
+    color: var(--green-900);
+}
+
+/* Logo on the authentication pages ----------------------- */
+.brand-logo {
+    object-fit: cover;
+    background: var(--white);
+    flex-shrink: 0;
+}
+
+.brand-large {
+    font-size: 24px;
+    gap: 14px;
+}
+
+.brand-logo-large {
+    width: 74px;
+    height: 74px;
+    border-radius: 20px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+/* Feature strip under the pitch -------------------------- */
+
+.pitch-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-top: 20px;
+    padding: 11px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface-mint);
+}
+
+.pitch-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    padding: 0 9px;
+    border-left: 1px solid var(--border);
+}
+
+.pitch-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.pitch-item strong {
+    display: block;
+    margin-bottom: 1px;
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green-900);
+}
+
+.pitch-item span span,
+.pitch-item > span:last-child {
+    font-size: 10.5px;
+    line-height: 1.4;
+    color: var(--muted);
+}
+.pitch-item:first-child {
+    padding-left: 0;
+    border-left: none;
+}
+
+.pitch-icon {
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    width: 34px;
+    height: 50px;
+}
+
+.pitch-item strong {
+    display: block;
+    margin-bottom: 2px;
+    font-family: var(--font-heading);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--green-900);
+}
+
+.pitch-item span span,
+.pitch-item > span:last-child {
+    font-size: 10.5px;
+    line-height: 1.4;
+    color: var(--muted);
+}
+
+@media (max-width: 880px) {
+    .pitch-strip {
+        display: none;
+    }
+}
+
+/* Register page ------------------------------------------ */
+
+/* Overrides the fixed height used by the login screen. */
+
+.register-page {
+    height: 100%;
+}
+
+.register-main {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding-bottom: 40px;
+}
+
+.register-head {
+    margin-bottom: 14px;
+}
+
+.register-head h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.9px;
+    color: var(--ink);
+}
+
+.register-head .auth-lead {
+    margin-top: 8px;
+    max-width: 620px;
+    font-size: 12.5px;
+}
+
+.register-form {
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    box-shadow: var(--shadow);
+}
+
+.register-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+}
+
+.form-heading {
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.register-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+}
+
+.register-note {
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--muted);
+}
+
+.register-note a {
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.register-note a:hover {
+    text-decoration: underline;
+}
+
+.role-choice {
+    margin-bottom: 14px;
+}
+
+@media (max-width: 880px) {
+    .register-columns {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .register-actions {
+        flex-wrap: wrap;
+    }
+
+    .register-note {
+        margin-left: 0;
+        width: 100%;
+    }
+}
