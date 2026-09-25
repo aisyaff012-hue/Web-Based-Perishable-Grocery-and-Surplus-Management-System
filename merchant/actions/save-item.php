@@ -227,6 +227,37 @@ try {
         );
 
         setFlash('listing_success', $productName . ' was updated.');
+
+        /*
+         * An edit can push an item straight into surplus (for example
+         * the expiry date is moved into the donation window). The
+         * status engine then sees it as already-surplus and never
+         * fires the alert, so the NGO notification is sent here.
+         */
+        if (
+            $pricing['status'] === 'surplus'
+            && $existing['status'] !== 'surplus'
+        ) {
+            $businessName = $_SESSION['entity_name'] ?? 'A merchant';
+
+            logActivity(
+                $pdo,
+                $merchantId,
+                'became_surplus',
+                $productName . ' moved to surplus and is now '
+                    . 'available to NGOs.'
+            );
+
+            notifyAllNgos(
+                $pdo,
+                'New surplus available',
+                $businessName . ' has ' . $quantity . ' ' . $unit
+                    . ' of ' . $productName . ' available as surplus. Expires '
+                    . date('d M Y', strtotime($expiryDate)) . '.',
+                'item',
+                (int) $itemId
+            );
+        }
     } else {
         $insertStatement = $pdo->prepare(
             "INSERT INTO inventory (
