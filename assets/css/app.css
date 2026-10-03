@@ -1,5 +1,5 @@
 /* ============================================================
-   FreshTrack — application shell, sidebar, cards, tables.
+   FreshTrack — shell aplikasi, sidebar, kad, jadual.
    ============================================================ */
 .shell {
     display: grid;
@@ -23,7 +23,7 @@
     padding: 4px 8px 26px;
 }
 
-/* Dark sidebar adjustments */
+/* Penyesuaian sidebar gelap (dark) */
 
 .sidebar-brand .brand {
     color: var(--white);
@@ -103,7 +103,7 @@
     color: var(--muted);
 }
 
-/* Top bar */
+/* Bar atas (topbar) */
 
 .main {
     display: flex;
@@ -155,7 +155,7 @@
     color: var(--green-900);
 }
 
-/* tukar ke solid green when something is waiting. */
+/* Tukar ke hijau solid bila ada notifikasi menunggu. */
 .bell-active {
     border-color: var(--green-900);
     background: var(--green-900);
@@ -219,7 +219,7 @@
     color: var(--muted);
 }
 
-/* Content */
+/* Kandungan */
 
 .content {
     flex: 1;
@@ -245,7 +245,7 @@
     color: var(--muted);
 }
 
-/* Stat cards */
+/* Kad statistik (stat cards) */
 
 .stat-grid {
     display: grid;
@@ -293,7 +293,7 @@
     color: var(--muted);
 }
 
-/* Panels */
+/* Panel */
 
 .panel-grid {
     display: grid;
@@ -337,7 +337,7 @@
     padding: 8px 18px 18px;
 }
 
-/* Lists inside panels */
+/* Senarai dalam panel */
 
 .feed {
     display: grid;
@@ -374,7 +374,7 @@
     color: var(--muted);
 }
 
-/* Tables */
+/* Jadual */
 
 .table-wrap {
     overflow-x: auto;
@@ -424,7 +424,7 @@
     color: var(--muted);
 }
 
-/* Status badges */
+/* Badge status */
 
 .badge {
     display: inline-block;
@@ -475,7 +475,7 @@
     color: #6d28d9;
 }
 
-/* Empty state */
+/* Keadaan kosong (empty state) */
 
 .empty {
     padding: 34px 18px;
@@ -492,7 +492,7 @@
     color: var(--ink);
 }
 
-/* Responsive */
+/* Responsif */
 
 @media (max-width: 1080px) {
     .stat-grid {
@@ -523,7 +523,7 @@
     }
 }
 
-/* Filter bar */
+/* Bar penapis (filter) */
 
 .filter-bar {
     display: flex;
@@ -543,7 +543,7 @@
     min-width: 140px;
 }
 
-/* Row actions */
+/* Tindakan pada baris (row actions) */
 
 .row-actions {
     display: flex;
@@ -587,7 +587,7 @@
 .value-none {
     color: var(--muted);
 }
-/* Form panel */
+/* Panel form */
 
 .form-panel {
     max-width: 620px;
@@ -609,7 +609,7 @@
 textarea {
     resize: vertical;
 }
-/* Tabs */
+/* Tab */
 
 .tabs {
     display: flex;
@@ -642,7 +642,7 @@ textarea {
     font-weight: 600;
     box-shadow: var(--shadow-sm);
 }
-/* Split layout */
+/* Layout berpecah dua (split layout) */
 
 .split-layout {
     display: grid;
@@ -696,7 +696,7 @@ textarea {
         grid-template-columns: 1fr;
     }
 }
-/* Pill action buttons */
+/* Butang bentuk pil (pill action buttons) */
 
 .pill {
     padding: 6px 14px;
@@ -756,7 +756,7 @@ textarea {
     background: var(--danger-soft);
     color: var(--danger);
 }
-/* Notification list */
+/* Senarai notifikasi */
 
 .note-list {
     display: grid;
@@ -799,7 +799,7 @@ textarea {
     color: #4a5b52;
 }
 
-/* Bar chart */
+/* Carta bar (bar chart) */
 
 .chart-frame {
     display: flex;
@@ -807,7 +807,7 @@ textarea {
     padding-top: 10px;
 }
 
-/* Y-axis labels sit outside the plot so bars stay aligned. */
+/* Label paksi-Y diletak di luar kawasan plot supaya bar kekal sejajar. */
 .chart-axis {
     display: flex;
     flex-direction: column;
@@ -829,7 +829,7 @@ textarea {
     background: var(--white);
 }
 
-/* Four evenly spaced grid lines behind the bars. */
+/* Empat garis grid jarak sama rata di belakang bar. */
 .chart-grid {
     position: absolute;
     inset: 0 0 22px 0;
@@ -905,7 +905,7 @@ textarea {
     margin-bottom: 6px;
     font-size: 14px;
 }
-/* Profile and settings */
+/* Page Profile dan Settings */
 
 .form-section-title {
     margin-bottom: 16px;
@@ -931,7 +931,7 @@ textarea {
     line-height: 1.5;
 }
 
-/* Toggle rows */
+/* Baris toggle (switch) */
 
 .toggle-row {
     display: flex;
@@ -970,7 +970,7 @@ textarea {
     color: var(--ink);
 }
 
-/* Rule summary */
+/* Ringkasan peraturan (rule summary) */
 
 .rule-line {
     display: flex;
@@ -985,7 +985,7 @@ textarea {
 .rule-line:last-of-type {
     border-bottom: none;
 }
-/* Profile page */
+/* Page Profile */
 
 
 .profile-hero {
@@ -1094,7 +1094,7 @@ textarea {
         grid-template-columns: 1fr;
     }
 }
-/* Full-width profile layout */
+/* Layout profile lebar-penuh */
 
 .profile-hero > .button {
     margin-left: auto;
@@ -1107,7 +1107,7 @@ textarea {
     gap: 9px 30px;
 }
 
-/* Detail cells laid out in a grid rather than stacked rows */
+/* Sel detail disusun grid, bukan baris bertindan (stacked) */
 .info-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -1154,7 +1154,7 @@ textarea {
     max-height: 88vh;
     overflow-y: auto;
 }
-/* Narrower sidebar */
+/* Sidebar lebih sempit */
 
 .sidebar {
     padding: 20px 12px;
@@ -1165,7 +1165,7 @@ textarea {
     font-size: 13px;
 }
 
-/* Stat cards, icon-led */
+/* Kad statistik, ikon di hadapan (icon-led) */
 
 .stat-grid {
     gap: 12px;
@@ -1213,7 +1213,7 @@ textarea {
     color: var(--muted);
 }
 
-/* Category icon in tables */
+/* Ikon kategori dalam jadual */
 
 .cell-product {
     display: flex;
@@ -1232,7 +1232,7 @@ textarea {
     font-size: 18px;
 }
 
-/* Days remaining hints */
+/* Petunjuk baki hari (days remaining) */
 
 .days-hint {
     display: block;
@@ -1258,7 +1258,7 @@ textarea {
     color: var(--green-600);
 }
 
-/* Coloured tabs */
+/* Tab berwarna */
 
 .tab-approved.tab-active {
     background: var(--surface-green);
@@ -1284,7 +1284,7 @@ textarea {
     box-shadow: none;
 }
 
-/* Top contributors --------------------------------------- */
+/* Penyumbang teratas (top contributors) -------------------- */
 
 .rank-list {
     display: grid;
@@ -1412,7 +1412,7 @@ textarea {
     color: var(--green-900);
 }
 
-/* Product photos ----------------------------------------- */
+/* Gambar produk ----------------------------------------- */
 
 .category-icon.has-photo {
     padding: 0;
@@ -1427,7 +1427,7 @@ textarea {
     display: block;
 }
 
-/* Upload field ------------------------------------------- */
+/* Field upload ------------------------------------------- */
 
 .upload-row {
     display: flex;
@@ -1486,7 +1486,7 @@ textarea {
 .remove-photo input {
     accent-color: var(--danger);
 }
-/* Info dot ----------------------------------------------- */
+/* Info dot (ikon tanya) ----------------------------------- */
 
 .info-dot {
     display: grid;
@@ -1531,7 +1531,7 @@ textarea {
     border-color: #99231a;
     background: #99231a;
 }
-/* Sidebar logo ------------------------------------------- */
+/* Logo sidebar ------------------------------------------- */
 
 .sidebar-brand .brand {
     text-decoration: none;
@@ -1546,7 +1546,7 @@ textarea {
     flex-shrink: 0;
 }
 
-/* Modal title icon --------------------------------------- */
+/* Ikon tajuk modal ----------------------------------------- */
 
 .modal-title {
     display: flex;
@@ -1561,7 +1561,7 @@ textarea {
     flex-shrink: 0;
 }
 
-/* Item detail panel -------------------------------------- */
+/* Panel detail item ---------------------------------------- */
 
 .detail-highlight {
     display: grid;
@@ -1591,7 +1591,7 @@ textarea {
     color: var(--muted);
 }
 
-/* Collection details ------------------------------------- */
+/* Maklumat kutipan (collection details) --------------------- */
 
 .pickup-block {
     margin-top: 18px;
@@ -1626,7 +1626,7 @@ textarea {
     text-align: center;
 }
 
-/* Sidebar logout button ---------------------------------- */
+/* Butang logout dalam sidebar ------------------------------ */
 
 .nav-button {
     width: 100%;
@@ -1637,7 +1637,7 @@ textarea {
     cursor: pointer;
 }
 
-/* Image icons in stat cards ------------------------------ */
+/* Ikon gambar dalam kad statistik --------------------------- */
 
 .stat-icon img {
     width: 85%;
@@ -1645,7 +1645,7 @@ textarea {
     object-fit: contain;
 }
 
-/* yang baru so override the default green. */
+/* Warna baru — override hijau default. */
 .stat-card .icon-green {
     background: #e6f4e6;
 }
@@ -1668,7 +1668,7 @@ textarea {
     background: #e4eefb;
 }
 
-/* Donut chart -------------------------------------------- */
+/* Carta donut ----------------------------------------------- */
 
 .donut-wrap {
     display: flex;
@@ -1755,7 +1755,7 @@ textarea {
     }
 }
 
-/* Notification toast ------------------------------------- */
+/* Toast notifikasi ------------------------------------------- */
 
 .toast {
     position: fixed;
@@ -1827,8 +1827,8 @@ textarea {
     background: var(--green-200);
 }
 /* ============================================================
-   Surplus card grid — NGO "Available Surplus" page
-   Append to the end of assets/css/app.css
+   Grid kad surplus — page "Available Surplus" NGO
+   Diselit di hujung assets/css/app.css
    ============================================================ */
 
 .surplus-grid {
@@ -1854,7 +1854,7 @@ textarea {
     transform: translateY(-2px);
 }
 
-/* Media strip ------------------------------------------- */
+/* Jalur media (gambar) ------------------------------------ */
 
 .surplus-card-media {
     position: relative;
@@ -1890,7 +1890,7 @@ textarea {
     right: 10px;
 }
 
-/* Body --------------------------------------------------- */
+/* Badan kad ------------------------------------------------- */
 
 .surplus-card-body {
     display: flex;
@@ -1940,7 +1940,7 @@ textarea {
     font-weight: 600;
 }
 
-/* Meta list ---------------------------------------------- */
+/* Senarai meta (ikon kecil + teks) --------------------------- */
 
 .surplus-card-meta {
     display: grid;
@@ -1972,7 +1972,7 @@ textarea {
     text-align: center;
 }
 
-/* Responsive --------------------------------------------- */
+/* Responsif --------------------------------------------- */
 
 @media (max-width: 640px) {
     .surplus-grid {
@@ -1982,8 +1982,8 @@ textarea {
 }
 
 /* ============================================================
-   Expired tab — waste reporting
-   Append to the end of assets/css/app.css
+   Tab Expired — laporan pembaziran (waste)
+   Diselit di hujung assets/css/app.css
    ============================================================ */
 
 .waste-summary {
@@ -2036,18 +2036,18 @@ textarea {
 }
 
 /* ============================================================
-   Surplus map — Leaflet panel on the NGO surplus page
-   Append to the end of assets/css/app.css
+   Peta surplus — panel Leaflet pada page surplus NGO
+   Diselit di hujung assets/css/app.css
    ============================================================ */
 
 
 
 /* ============================================================
-   Nearby me — distance chips, preview map, form hints
-   Append to the end of assets/css/app.css
+   Nearby me — chip jarak, preview map, hint form
+   Diselit di hujung assets/css/app.css
    ============================================================*/
 
-/* Prompts shown when the NGO has no coordinates ----------- */
+/* Notis bila NGO belum ada koordinat ----------------------- */
 
 .alert-info {
     margin-bottom: 18px;
@@ -2063,7 +2063,7 @@ textarea {
     font-weight: 600;
 }
 
-/* Coordinate hint under the profile fields --------------- */
+/* Hint koordinat di bawah field profil --------------------- */
 
 .field-hint {
     margin: 6px 0 0;
@@ -2072,7 +2072,7 @@ textarea {
     line-height: 1.4;
 }
 
-/* Dashboard preview map ---------------------------------- */
+/* Preview map pada dashboard -------------------------------- */
 
 .panel-sub {
     margin: 2px 0 0;
@@ -2081,8 +2081,8 @@ textarea {
 }
 
 /* ============================================================
-   Surplus Map page — full-stage map, pins, popups
-   Append to the end of assets/css/app.css
+   Page Surplus Map — map penuh skrin, pin, popup
+   Diselit di hujung assets/css/app.css
    ============================================================ */
 
 .map-stage {
@@ -2100,7 +2100,7 @@ textarea {
     background: var(--surface-mint);
 }
 
-/* Floating controls -------------------------------------- */
+/* Kawalan terapung (floating controls) ----------------------- */
 
 .map-fab {
     position: absolute;
@@ -2145,7 +2145,7 @@ textarea {
     color: var(--white);
 }
 
-/* Merchant pin ------------------------------------------- */
+/* Pin merchant ----------------------------------------------- */
 
 .pin {
     display: flex;
@@ -2199,7 +2199,7 @@ textarea {
     color: var(--white);
 }
 
-/* Popup --------------------------------------------------- */
+/* Popup ---------------------------------------------------- */
 
 .leaflet-container {
     font-family: var(--font-body);
@@ -2267,8 +2267,8 @@ textarea {
 }
 
 /* ============================================================
-   Shop cards — merchant-first surplus listing
-   Append to the end of assets/css/app.css
+   Kad kedai — senarai surplus merchant-dulu (shop-first)
+   Diselit di hujung assets/css/app.css
    ============================================================ */
 
 .shop-card {
@@ -2301,7 +2301,7 @@ textarea {
     font-weight: 600;
 }
 
-/* Body ---------------------------------------------------- */
+/* Badan kad -------------------------------------------------- */
 
 .shop-card-body {
     flex: 1;
@@ -2340,7 +2340,7 @@ textarea {
     white-space: nowrap;
 }
 
-/* Preview strip ------------------------------------------- */
+/* Jalur preview produk --------------------------------------- */
 
 .shop-card-preview {
     display: flex;
@@ -2407,7 +2407,7 @@ textarea {
     font-weight: 700;
 }
 
-/* Level 2 header ------------------------------------------ */
+/* Header Tahap 2 (satu merchant) ------------------------------ */
 
 .back-link {
     display: inline-block;
@@ -2423,10 +2423,10 @@ textarea {
 }
 
 /* ============================================================
-   Shop hero + collection panel — surplus level 2
-   Append to the end of assets/css/app.css
-   REPLACES the old .shop-banner / .shop-banner-meta rules,
-   which you can delete.
+   Shop hero + panel kutipan — surplus Tahap 2
+   Diselit di hujung assets/css/app.css
+   GANTIKAN rule lama .shop-banner / .shop-banner-meta,
+   yang boleh dibuang.
    ============================================================ */
 
 .shop-hero {
@@ -2449,7 +2449,7 @@ textarea {
     opacity: 0.5;
 }
 
-/* A gradient so white text stays legible over any photo. */
+/* Gradient supaya teks putih kekal boleh dibaca atas apa-apa gambar. */
 .shop-hero::after {
     content: '';
     position: absolute;
@@ -2463,7 +2463,7 @@ textarea {
     pointer-events: none;
 }
 
-/* Back button --------------------------------------------- */
+/* Butang kembali (back) --------------------------------------- */
 
 .shop-hero-back {
     position: absolute;
@@ -2489,7 +2489,7 @@ textarea {
     color: var(--white);
 }
 
-/* Caption -------------------------------------------------- */
+/* Caption (nama kedai + saved units) ---------------------------- */
 
 .shop-hero-caption {
     position: absolute;
@@ -2532,7 +2532,7 @@ textarea {
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
 }
 
-/* Collection panel ----------------------------------------- */
+/* Panel kutipan (collection panel) ------------------------------ */
 
 .collect-panel {
     display: flex;
@@ -2544,8 +2544,8 @@ textarea {
     background: var(--surface-green);
 }
 
-/* The hours block holds the longest line, so it gets more room
-   than the two that follow it. */
+/* Blok waktu operasi ada baris paling panjang, jadi ia dapat
+   lebih ruang berbanding dua blok selepas dia. */
 .collect-main {
     display: grid;
     grid-template-columns: 1.5fr 1.2fr 1fr;
@@ -2639,11 +2639,11 @@ textarea {
 }
 
 /* ============================================================
-   Shop photos — cards, banner, profile field, map pins
-   Append to the end of assets/css/app.css
+   Gambar kedai (shop photos) — kad, banner, field profil, pin map
+   Diselit di hujung assets/css/app.css
    ============================================================ */
 
-/* Cover element ------------------------------------------- */
+/* Elemen cover ------------------------------------------- */
 
 .shop-cover {
     display: flex;
@@ -2665,7 +2665,7 @@ textarea {
     color: var(--green-800);
 }
 
-/* On a shop card ------------------------------------------ */
+/* Pada kad kedai (shop card) ------------------------------- */
 
 .shop-card-media {
     position: relative;
@@ -2681,7 +2681,7 @@ textarea {
     font-size: 46px;
 }
 
-/* In the merchant profile form ---------------------------- */
+/* Dalam form profil merchant -------------------------------- */
 
 .shop-image-current {
     display: flex;
@@ -2715,7 +2715,7 @@ textarea {
     margin: 0;
 }
 
-/* On a map pin -------------------------------------------- */
+/* Pada pin map ---------------------------------------------- */
 
 .pin-photo {
     padding: 0;
@@ -2729,7 +2729,7 @@ textarea {
     display: block;
 }
 
-/* Popup "+n more" row ------------------------------------- */
+/* Baris "+n more" dalam popup -------------------------------- */
 
 .pop-more {
     font-size: 11.5px;
@@ -2763,12 +2763,12 @@ textarea {
 }
 
 /* ============================================================
-   Nearby merchant list — NGO dashboard
-   Append to the end of assets/css/app.css
+   Senarai merchant berdekatan — dashboard NGO
+   Diselit di hujung assets/css/app.css
 
-   REPLACES the old dashboard preview map. You can delete these
-   rules from earlier: .nearby-panel, .nearby-map-link, #nearbyMap
-   and .nearby-map-link:hover::after
+   GANTIKAN preview map dashboard lama. Rule lama ni boleh dibuang:
+   .nearby-panel, .nearby-map-link, #nearbyMap
+   dan .nearby-map-link:hover::after
    ============================================================ */
 
 .nearby-list {
@@ -2912,7 +2912,7 @@ textarea {
     margin: 3px 0 0;
 }
 
-/* Bigger stat cards --------------------------------------- */
+/* Kad statistik lebih besar --------------------------------- */
 
 .stat-card {
     gap: 18px;
@@ -2970,7 +2970,7 @@ textarea {
 .panel-grid {
     align-items: start;
 }
-/* Reports keeps the compact card size ---------------------- */
+/* Page Reports kekal saiz kad padat --------------------------- */
 
 .page-reports .stat-card {
     gap: 14px;
@@ -2998,7 +2998,7 @@ textarea {
 .page-merchant-grid {
     align-items: start;
 }
-/* Compact surplus cards on the merchant Donations page ---- */
+/* Kad surplus padat pada page Donations merchant -------------- */
 
 .page-merchant-surplus {
     grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
@@ -3045,11 +3045,11 @@ textarea {
 }
 
 /* ============================================================
-   Sidebar — icons, brand block, collapse
-   Append to the end of assets/css/app.css
+   Sidebar — ikon, blok brand, collapse
+   Diselit di hujung assets/css/app.css
    ============================================================ */
 
-/* Brand ---------------------------------------------------- */
+/* Brand ------------------------------------------------------ */
 
 .sidebar-brand {
     display: flex;
@@ -3103,7 +3103,7 @@ textarea {
     color: var(--white);
 }
 
-/* Nav links ------------------------------------------------ */
+/* Link navigasi ------------------------------------------------ */
 
 .nav-link {
     gap: 12px;
@@ -3129,7 +3129,7 @@ textarea {
     gap: 2px;
 }
 
-/* Collapsed state ------------------------------------------ */
+/* Keadaan collapsed (sidebar dilipat) --------------------------- */
 
 .shell-collapsed {
     grid-template-columns: 68px 1fr;
@@ -3162,7 +3162,7 @@ textarea {
     padding-right: 0;
 }
 
-/* A dot instead of a number — there is no room for digits. */
+/* Guna satu titik (dot) ganti nombor — tiada ruang untuk digit. */
 .shell-collapsed .nav-badge {
     position: absolute;
     top: 6px;
@@ -3175,10 +3175,10 @@ textarea {
 }
 
 /*
- * Below this width the layout stacks, so a 68px icon rail would
- * sit awkwardly beside full-width content. The sidebar returns
- * to full width and the toggle is hidden, since collapsing is a
- * desktop convenience rather than a mobile one.
+ * Di bawah lebar ni layout jadi satu lajur (stack), jadi rel
+ * ikon 68px akan nampak janggal sebelah content lebar-penuh.
+ * Sidebar kembali ke lebar penuh dan toggle disembunyikan, sebab
+ * "collapse" tu kemudahan desktop, bukan untuk mobile.
  */
 @media (max-width: 560px) {
     .shell-collapsed {
@@ -3201,8 +3201,8 @@ textarea {
     }
 }
 
-/* Keeps the sidebar text from pushing a scrollbar during the
-   expand transition. */
+/* Elak teks sidebar tolak keluar scrollbar semasa transisi
+   buka/tutup (expand). */
 
 .shell {
     overflow-x: clip;
@@ -3244,7 +3244,7 @@ textarea {
     color: var(--white);
 }
 
-/* A zero adds nothing but clutter. */
+/* Angka sifar (0) cuma menyemak, tiada makna — sembunyikan je. */
 .tab-count:empty {
     display: none;
 }
@@ -3263,8 +3263,8 @@ textarea {
     background: var(--green-800);
 }
 
-/* rejection reason, clipped to two lines with the
-   full text in the tooltip. */
+/* Sebab penolakan (rejection reason), dipotong kepada 2 baris,
+   teks penuh dalam tooltip. */
 .reason-inline {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -3276,15 +3276,15 @@ textarea {
     white-space: normal;
 }
 
-/* Fixed column widths so the layout does not shift between
-   tabs when the content in each column changes. */
+/* Lebar lajur tetap (fixed) supaya layout tak beralih antara
+   tab bila kandungan setiap lajur berubah. */
 .table-requests {
     table-layout: fixed;
     width: 100%;
 }
 
-/* The thumbnail is the widest thing in the product cell, so it
-   sets the floor for that column. */
+/* Thumbnail adalah elemen paling lebar dalam sel produk, jadi
+   ia tentukan lebar minimum lajur tu. */
 .table-requests .category-icon {
     width: 58px;
     height: 44px;
@@ -3298,8 +3298,8 @@ textarea {
     background: var(--surface-grey);
     color: #6b7280;
 }
-/* Leaflet styles links inside its popups, which overrides the
-   app's own button colours. */
+/* Leaflet style-kan link dalam popup dia sendiri, yang override
+   warna butang app kita. */
 .pop-actions .button,
 .leaflet-popup-content .pop-actions a {
     color: var(--white);
@@ -3314,8 +3314,8 @@ textarea {
 .pop-actions a:hover {
     text-decoration: none;
 }
-/* The map underneath can be any colour, so the tag needs its own
-   solid background rather than a tint. */
+/* Map di bawah boleh apa-apa warna pun, jadi tag perlukan
+   background solid sendiri, bukan sekadar tint (lutsinar). */
 .pin-tag {
     background: var(--white);
     color: var(--green-900);
@@ -3448,9 +3448,9 @@ textarea {
     gap: 8px;
 }
 
-/* Below tablet width a seven-column table cannot fit, so the
-   fixed widths are dropped and the table scrolls at its natural
-   size instead of squeezing every column. */
+/* Bawah lebar tablet, jadual 7-lajur tak muat, jadi lebar tetap
+   dibuang dan jadual scroll ikut saiz semula jadi dia, bukan
+   paksa setiap lajur himpit. */
 @media (max-width: 900px) {
     .table-requests {
         table-layout: auto;
@@ -3463,8 +3463,8 @@ textarea {
 }
 
 /* ============================================================
-   Report filters — date range and category
-   Append to the end of assets/css/app.css
+   Penapis report — julat tarikh dan kategori
+   Diselit di hujung assets/css/app.css
    ============================================================ */
  
 .export-actions {
@@ -3516,7 +3516,7 @@ textarea {
     margin-left: auto;
 }
  
-/* The filter summary in the print header ------------------ */
+/* Ringkasan filter dalam header print ------------------------ */
  
 .print-filter {
     margin: 4px 0 0;
@@ -3536,8 +3536,8 @@ textarea {
     }
 }
 /* ============================================================
-   Help page — collapsible guide sections
-   Append to the end of assets/css/app.css
+   Page Help — bahagian panduan yang boleh dibuka/tutup
+   Diselit di hujung assets/css/app.css
    ============================================================ */
  
 .help-intro {
@@ -3565,7 +3565,7 @@ textarea {
     margin-bottom: 0;
 }
  
-/* Accordion ----------------------------------------------- */
+/* Accordion (buka/tutup) ------------------------------------- */
  
 .help-list {
     display: grid;
@@ -3599,7 +3599,7 @@ textarea {
     background: var(--surface-mint);
 }
  
-/* Replace the default triangle with a chevron on the right. */
+/* Ganti segitiga default dengan anak panah (chevron) di kanan. */
 .help-item summary::-webkit-details-marker {
     display: none;
 }
@@ -3635,7 +3635,7 @@ textarea {
     margin-bottom: 0;
 }
  
-/* Steps and bullets ---------------------------------------- */
+/* Langkah dan bullet ------------------------------------------ */
  
 .help-steps {
     margin: 0 0 12px;
@@ -3657,7 +3657,7 @@ textarea {
     padding-left: 4px;
 }
  
-/* A note that is worth pausing on --------------------------- */
+/* Nota yang berbaloi untuk diperhati ---------------------------- */
  
 .help-note {
     padding: 11px 14px;
@@ -3668,7 +3668,7 @@ textarea {
     color: #4a5b52;
 }
  
-/* Tables inside the guide ---------------------------------- */
+/* Jadual dalam panduan ------------------------------------------ */
  
 .help-table {
     width: 100%;

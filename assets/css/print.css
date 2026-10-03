@@ -1,6 +1,7 @@
 /* ============================================================
-   FreshTrack — printable report sheet.
-   Save as assets/css/print.css (a new file, not an append).
+   FreshTrack — helaian report yang boleh dicetak (printable).
+   Simpan sebagai assets/css/print.css (fail baru, bukan diselit
+   dalam fail CSS lain).
    ============================================================ */
 
 .print-page {
@@ -8,7 +9,7 @@
     padding: 24px 16px 60px;
 }
 
-/* Toolbar, hidden when the sheet is actually printed. */
+/* Toolbar (butang Back/Print), disembunyikan bila helaian betul-betul dicetak. */
 
 .print-bar {
     display: flex;
@@ -65,7 +66,7 @@
     color: var(--green-900);
 }
 
-/* Blocks -------------------------------------------------- */
+/* Blok-blok kandungan -------------------------------------- */
 
 .print-block {
     margin-bottom: 30px;
@@ -81,7 +82,7 @@
     color: var(--green-800);
 }
 
-/* Merchant / organisation facts --------------------------- */
+/* Maklumat merchant / organisasi --------------------------- */
 
 .print-facts {
     display: grid;
@@ -103,7 +104,7 @@
     font-size: 13px;
 }
 
-/* Headline figures ---------------------------------------- */
+/* Angka utama (ringkasan) ---------------------------------- */
 
 .print-figures {
     display: grid;
@@ -138,7 +139,7 @@
     color: var(--muted);
 }
 
-/* Tables --------------------------------------------------- */
+/* Jadual ----------------------------------------------------- */
 
 .print-table {
     width: 100%;
@@ -175,7 +176,7 @@
     color: var(--muted);
 }
 
-/* Print rules ---------------------------------------------- */
+/* Peraturan khas masa print --------------------------------- */
 
 @media print {
     @page {
@@ -199,7 +200,8 @@
         box-shadow: none;
     }
 
-    /* A block should not be cut across two sheets. */
+    /* Satu blok (print-block) tak patut terpotong separuh antara
+       dua muka surat cetakan — elak satu bahagian content terbahagi. */
     .print-block {
         break-inside: avoid;
     }

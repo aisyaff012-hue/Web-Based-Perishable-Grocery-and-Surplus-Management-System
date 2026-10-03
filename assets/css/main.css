@@ -1,26 +1,26 @@
 /* ============================================================
-   FreshTrack — base styles, brand tokens, authentication.
-   Palette and typography follow the FreshTrack brand board.
+   FreshTrack — gaya asas, token jenama (brand), dan authentication.
+   Palet warna dan tipografi ikut brand board FreshTrack.
    ============================================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap');
 
 :root {
-    /* Greens */
+    /* Hijau */
     --green-900: #1b5e20;
     --green-800: #2e7d32;
     --green-600: #43a047;
     --green-400: #66bb6a;
     --green-200: #a5d6a7;
 
-    /* Neutrals */
+    /* Neutral */
     --surface-mint: #f1f8f4;
     --surface-green: #e8f5e9;
     --surface-cream: #fffdf7;
     --surface-grey: #f5f5f5;
     --ink: #212121;
 
-    /* Derived */
+    /* Terbitan (derived) */
     --muted: #6b7a70;
     --border: #e3ece6;
     --white: #ffffff;
@@ -68,7 +68,7 @@ a {
     color: var(--green-800);
 }
 
-/* Brand -------------------------------------------------- */
+/* Jenama (brand) ------------------------------------------ */
 
 .brand {
     display: inline-flex;
@@ -95,7 +95,7 @@ a {
     letter-spacing: 0;
 }
 
-/* Auth layout -------------------------------------------- */
+/* Layout halaman login/register --------------------------- */
 
 .auth-body {
     height: 100vh;
@@ -117,7 +117,7 @@ a {
     margin: 0 auto;
     padding: 22px 32px 0;
 }
-/* Fixed-height login page -------------------------------- */
+/* Halaman login tinggi tetap (fixed-height) --------------- */
 
 .auth-main {
     min-height: 0;
@@ -129,7 +129,7 @@ a {
     overflow-y: auto;
 }
 
-/* Top bar ------------------------------------------------ */
+/* Bar atas ------------------------------------------------ */
 
 .auth-top {
     display: flex;
@@ -163,7 +163,7 @@ a {
     color: var(--muted);
 }
 
-/* Compact fixed-height login ----------------------------- */
+/* Login tinggi-tetap (padat) ------------------------------ */
 
 .auth-top {
     margin-bottom: 20px;
@@ -214,7 +214,7 @@ a {
     font-size: 14.5px;
 }
 
-/* Three-column body -------------------------------------- */
+/* Badan tiga-kolum (login) --------------------------------- */
 
 .auth-main {
     display: grid;
@@ -267,7 +267,7 @@ a {
     color: var(--muted);
 }
 
-/* Illustration ------------------------------------------- */
+/* Ilustrasi ------------------------------------------------ */
 
 .auth-visual {
     display: grid;
@@ -280,7 +280,7 @@ a {
     height: auto;
 }
 
-/* Login card --------------------------------------------- */
+/* Kad login ------------------------------------------------- */
 
 .auth-panel {
     padding: 32px;
@@ -321,7 +321,7 @@ a {
     text-decoration: underline;
 }
 
-/* Footer ------------------------------------------------- */
+/* Footer ----------------------------------------------------- */
 
 .auth-bottom {
     padding: 18px 0 22px;
@@ -330,9 +330,9 @@ a {
     color: var(--muted);
 }
 
-/* Responsive --------------------------------------------- */
+/* Responsif --------------------------------------------- */
 
-/* Responsive --------------------------------------------- */
+/* Responsif --------------------------------------------- */
 
 @media (max-width: 1180px) {
     .auth-main {
@@ -364,7 +364,7 @@ a {
     }
 }
 
-/* Form elements ------------------------------------------ */
+/* Elemen form ---------------------------------------------- */
 
 .field {
     margin-bottom: 10px;
@@ -415,7 +415,7 @@ textarea:focus {
     box-shadow: 0 0 0 3px var(--surface-green);
 }
 
-/* Role selection ----------------------------------------- */
+/* Pemilihan role (Merchant/NGO) ----------------------------- */
 
 .role-choice {
     display: grid;
@@ -466,7 +466,7 @@ textarea:focus {
     color: var(--ink);
 }
 
-/* Buttons ------------------------------------------------ */
+/* Butang ------------------------------------------------------ */
 
 .button {
     display: inline-block;
@@ -508,7 +508,7 @@ textarea:focus {
     font-size: 13px;
 }
 
-/* Alerts ------------------------------------------------- */
+/* Alert (mesej ralat/success) --------------------------------- */
 
 .alert {
     margin-bottom: 18px;
@@ -533,7 +533,7 @@ textarea:focus {
     color: var(--green-900);
 }
 
-/* Logo on the authentication pages ----------------------- */
+/* Logo pada halaman authentication ---------------------------- */
 .brand-logo {
     object-fit: cover;
     background: var(--white);
@@ -553,7 +553,7 @@ textarea:focus {
     flex-shrink: 0;
 }
 
-/* Feature strip under the pitch -------------------------- */
+/* Jalur ciri (feature strip) bawah pitch ----------------------- */
 
 .pitch-strip {
     display: grid;
@@ -630,9 +630,12 @@ textarea:focus {
     }
 }
 
-/* Register page ------------------------------------------ */
+/* Halaman register --------------------------------------------- */
 
-/* Overrides the fixed height used by the login screen. */
+/* .register-page guna semula frame tinggi-tetap (fixed-height)
+   yang sama macam login — .register-body punya override dah
+   dibuang (baiki isu scroll), jadi di sini sekadar padankan
+   dengan auth-body (height: 100%), bukan "override" lagi. */
 
 .register-page {
     height: 100%;
