@@ -1,9 +1,9 @@
 <?php
 
 /*
- * A print-ready view of the merchant's impact report. The browser
- * handles the PDF itself through its print dialogue, which keeps
- * the system free of a PDF library and its dependencies.
+ * Paparan sedia-cetak (print-ready) untuk impact report merchant.
+ * Browser sendiri yang uruskan PDF melalui dialog print dia,
+ * supaya sistem tak perlu library PDF berasingan dan dependency-nya.
  */
 
 require_once __DIR__ . '/../includes/auth.php';
@@ -25,12 +25,17 @@ $profileStatement = $pdo->prepare(
 $profileStatement->execute([$merchantId]);
 $profile = $profileStatement->fetch();
 
+// Dua set filter berasingan: satu untuk tarikh surplus (stok),
+// satu lagi untuk tarikh tempahan selesai (pickup) — dua lajur
+// tarikh yang berbeza, walaupun guna nilai filter yang sama.
 $stockFilter = filterClause('surplus_since', 'category');
 $stockValues = filterValues();
 
 $pickupFilter = filterClause('reservations.completed_at');
 $pickupValues = filterValues();
 
+// Jumlah keseluruhan item yang pernah jadi surplus, dan jumlah
+// kuantiti yang terbazir (tak sempat dikutip sebelum luput).
 $summaryStatement = $pdo->prepare(
     "SELECT
         COALESCE(SUM(surplus_since IS NOT NULL), 0) AS total_surplus,
@@ -45,6 +50,9 @@ $summaryStatement = $pdo->prepare(
 $summaryStatement->execute(array_merge([$merchantId], $stockValues));
 $summary = $summaryStatement->fetch();
 
+// Jumlah tempahan yang berjaya dikutip (completed), kuantiti dan
+// anggaran nilai pasaran yang berjaya diselamatkan daripada
+// terbazir.
 $collectedStatement = $pdo->prepare(
     "SELECT
         COUNT(*) AS collected_requests,
@@ -61,6 +69,7 @@ $collectedStatement = $pdo->prepare(
 $collectedStatement->execute(array_merge([$merchantId], $pickupValues));
 $collected = $collectedStatement->fetch();
 
+// Taburan surplus ikut kategori, untuk jadual "Surplus by Category".
 $categoryStatement = $pdo->prepare(
     "SELECT category, COUNT(*) AS item_count
      FROM inventory
@@ -75,6 +84,8 @@ $categoryStatement = $pdo->prepare(
 $categoryStatement->execute(array_merge([$merchantId], $stockValues));
 $byCategory = $categoryStatement->fetchAll();
 
+// Senarai NGO yang pernah kutip surplus dari merchant ni, susun
+// ikut jumlah unit dikutip terbanyak dulu — untuk jadual "NGO Partners".
 $partnerStatement = $pdo->prepare(
     "SELECT
         users.organization_name,
@@ -98,6 +109,8 @@ $partners = $partnerStatement->fetchAll();
 
 $available = availableQuantitySql();
 
+// Senarai penuh item surplus (dalam tempoh filter) untuk jadual
+// terperinci "Surplus Items" di hujung report.
 $itemStatement = $pdo->prepare(
     "SELECT
         inventory.product_name,
@@ -130,6 +143,9 @@ $unitsSaved = (int) $collected['collected_quantity'];
 $unitsWasted = (int) $summary['total_wasted'];
 $handled = $unitsSaved + $unitsWasted;
 
+// Kadar pengagihan (%) = unit yang berjaya dikutip dibahagi
+// jumlah unit yang "selesai" (dikutip + terbazir). null kalau
+// belum ada unit yang selesai lagi, untuk elak bahagi dengan 0.
 $rate = $handled > 0
     ? round($unitsSaved / $handled * 100)
     : null;

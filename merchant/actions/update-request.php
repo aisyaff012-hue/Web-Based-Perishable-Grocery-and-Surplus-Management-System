@@ -37,6 +37,9 @@ if ($decision === 'reject' && $rejectionReason === '') {
 try {
     $pdo->beginTransaction();
 
+    // FOR UPDATE kunci baris reservation ni sepanjang transaksi,
+    // elak dua keputusan (cth approve + reject) diproses serentak
+    // untuk request yang sama.
     $statement = $pdo->prepare(
         "SELECT
             reservations.request_id,
@@ -66,9 +69,9 @@ try {
     }
 
     /*
-     * Each decision is only valid from one starting state, which
-     * keeps the workflow moving in one direction:
-     * pending -> approved -> completed, or pending -> rejected.
+     * Setiap keputusan hanya sah dari SATU status permulaan, supaya
+     * aliran kerja bergerak dalam satu arah sahaja:
+     * pending -> approved -> completed, atau pending -> rejected.
      */
     $allowedFrom = [
         'approve' => 'pending',
@@ -121,6 +124,8 @@ try {
 
     $pdo->commit();
 
+    // Notifikasi & log dihantar SELEPAS commit berjaya, supaya
+    // tiada notifikasi dihantar kalau transaksi DB di atas gagal.
     createNotification(
         $pdo,
         (int) $reservation['ngo_id'],

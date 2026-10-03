@@ -1,10 +1,10 @@
 <?php
 
 /*
- * Streams the merchant's surplus record as CSV. Nothing is
- * written to disk: the file is built in memory and pushed
- * straight to the browser, so there is no upload folder to
- * secure and no stale exports to clean up.
+ * Alirkan rekod surplus merchant sebagai CSV. Tiada apa ditulis
+ * ke disk: fail dibina dalam memori dan terus dihantar ke
+ * browser, jadi tiada folder upload perlu dijaga dan tiada
+ * fail export lama yang perlu dibersihkan.
  */
 
 require_once __DIR__ . '/../includes/auth.php';
@@ -66,6 +66,8 @@ $statement = $pdo->prepare(
 $statement->execute(array_merge([$merchantId], $stockValues));
 $rows = $statement->fetchAll();
 
+// Nama fail unik ikut nama perniagaan + tarikh, cth:
+// freshtrack-surplus-freshmart-grocery-2026-10-03.csv
 $fileName = 'freshtrack-surplus-'
     . preg_replace('/[^a-z0-9]+/i', '-', $businessName) . '-'
     . date('Y-m-d') . '.csv';
@@ -75,7 +77,7 @@ header('Content-Disposition: attachment; filename="' . $fileName . '"');
 
 $output = fopen('php://output', 'w');
 
-// Excel reads UTF-8 correctly only when the file starts with a BOM.
+// Excel baca UTF-8 dengan betul hanya kalau fail bermula dengan BOM.
 fwrite($output, "\xEF\xBB\xBF");
 
 fputcsv($output, [
@@ -103,6 +105,8 @@ foreach ($rows as $row) {
     $collected = (int) $row['collected_quantity'];
     $wasted = (int) $row['wasted_quantity'];
 
+    // Kumpul jumlah keseluruhan (collected & wasted) sepanjang
+    // loop, untuk baris TOTALS di hujung fail nanti.
     $totalCollected += $collected;
     $totalWasted += $wasted;
 
@@ -130,8 +134,9 @@ foreach ($rows as $row) {
 }
 
 /*
- * A totals row at the foot so the sheet answers the headline
- * question without the reader writing a formula.
+ * Satu baris jumlah (totals) di hujung sheet supaya ia terus
+ * jawab soalan utama (berapa % berjaya diagih) tanpa pembaca
+ * perlu tulis formula sendiri dalam Excel.
  */
 $handled = $totalCollected + $totalWasted;
 

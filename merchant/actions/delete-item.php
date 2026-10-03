@@ -29,6 +29,9 @@ if (!$itemId) {
 try {
     $pdo->beginTransaction();
 
+    // FOR UPDATE kunci baris ni sepanjang transaksi, elak request
+    // delete lain (atau proses lain) ubah item yang sama serentak
+    // sementara kita masih semak reservation aktif dia.
     $itemStatement = $pdo->prepare(
         "SELECT item_id, product_name, image_file
          FROM inventory
@@ -51,8 +54,8 @@ try {
     }
 
     /*
-     * An NGO may already be depending on this item, so active
-     * reservations must be settled before it disappears.
+     * NGO mungkin sedang bergantung pada item ni, jadi reservation
+     * yang masih aktif kena diselesaikan dulu sebelum item hilang.
      */
     $activeStatement = $pdo->prepare(
         "SELECT COUNT(*)
@@ -77,8 +80,8 @@ try {
     }
 
     /*
-     * Soft delete. The row stays so past reservation history and
-     * report figures remain intact.
+     * Soft delete. Baris tu kekal dalam DB supaya sejarah
+     * reservation lama dan angka report tetap utuh.
      */
     $deleteStatement = $pdo->prepare(
         "UPDATE inventory
@@ -90,6 +93,9 @@ try {
     $deleteStatement->execute([$itemId, $merchantId]);
 
     $pdo->commit();
+
+    // Padam fail gambar SELEPAS commit berjaya — kalau transaksi DB
+    // gagal/rollback, fail gambar asal tak hilang sia-sia.
         deleteProductImage($item['image_file']);
 
     logActivity(

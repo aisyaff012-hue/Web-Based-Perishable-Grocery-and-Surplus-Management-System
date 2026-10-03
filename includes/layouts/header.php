@@ -1,11 +1,11 @@
 <?php
 
 /*
- * Shared page shell: opens the document, sidebar and top bar.
- * Every dashboard page includes this file, then closes with
- * footer.php.
+ * Shell page yang dikongsi: buka dokumen, sidebar dan top bar.
+ * Setiap dashboard page include fail ni dulu, kemudian tutup
+ * dengan footer.php.
  *
- * Expected before include:
+ * Dijangka sedia sebelum include fail ni:
  *   $pageTitle   string
  *   $activePage  string
  */
@@ -15,6 +15,8 @@ $displayId = $_SESSION['display_id'] ?? '';
 $fullName = $_SESSION['full_name'] ?? '';
 $entityName = $_SESSION['entity_name'] ?? '';
 
+// Menu sidebar berbeza ikut role: merchant nampak menu
+// stok/jualan, NGO nampak menu surplus/tempahan.
 $navigation = $role === 'merchant'
     ? [
         'dashboard' => ['Dashboard', 'dashboard.php'],
@@ -32,6 +34,8 @@ $navigation = $role === 'merchant'
         'reports'       => ['Reports', 'reports.php'],
     ];
 
+// Jumlah notifikasi belum dibaca, untuk papar badge kat loceng
+// (topbar) dan sidebar.
 $unreadCount = isset($pdo)
     ? getUnreadCount($pdo, (int) $_SESSION['user_id'])
     : 0;
@@ -135,7 +139,6 @@ if (isset($pdo)) {
                 <span class="nav-text">Logout</span>
             </button>
         </div>
-    </aside>
     </aside>
 
     <div class="main">

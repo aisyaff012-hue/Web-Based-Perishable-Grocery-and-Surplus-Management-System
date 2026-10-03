@@ -52,7 +52,9 @@ if ($pickupLocation === '') {
     $errors[] = 'Pickup location is required.';
 }
 
-// The email must stay unique across every account but this one.
+// Email kena kekal unik merentasi SEMUA akaun KECUALI akaun sendiri
+// (user_id <> $merchantId) — kalau tidak, merchant tak boleh save
+// profil dia walaupun email tu memang email dia sendiri.
 if (!$errors) {
     $emailStatement = $pdo->prepare(
         "SELECT 1 FROM users WHERE email = ? AND user_id <> ? LIMIT 1"
@@ -94,6 +96,9 @@ try {
 
     $shopImage = $currentImage;
 
+    // Checkbox "remove photo" dan upload gambar baru dua-dua boleh
+    // berlaku dalam submit yang sama; urutan di bawah pastikan
+    // upload baru menang kalau user buat dua-dua sekali.
     if (!empty($_POST['remove_shop_image'])) {
         deleteShopImage($currentImage);
         $shopImage = null;
@@ -146,7 +151,8 @@ try {
         $merchantId
     ]);
 
-    // Keep the header and greeting in step with the new details.
+    // Kemaskini session sekali, supaya header & ucapan "Welcome
+    // back" terus ikut nama/perniagaan terkini tanpa perlu log out.
     $_SESSION['full_name'] = $fullName;
     $_SESSION['entity_name'] = $businessName;
 

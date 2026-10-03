@@ -55,7 +55,8 @@ if ($basePrice === false || $basePrice === null || $basePrice < 0) {
     $errors[] = 'Base price must be a positive number.';
 }
 
-// Confirms the date is real, not just correctly formatted.
+// Sahkan tarikh tu betul-betul wujud, bukan setakat format betul
+// (cth 2026-02-30 format tu sah tapi tarikh tu tak wujud).
 $parsedDate = DateTime::createFromFormat('Y-m-d', $expiryDate);
 
 if (
@@ -65,9 +66,9 @@ if (
     $errors[] = 'Please enter a valid expiry date.';
 } elseif ($mode === 'add' && $expiryDate < date('Y-m-d')) {
     /*
-     * Only new items are blocked. An existing item may legitimately
-     * hold a past date once it has expired, and editing it for some
-     * other reason should not be refused.
+     * Hanya item BARU disekat. Item sedia ada boleh sah-sah ada
+     * tarikh lepas sekali ia dah luput, dan edit item tu atas
+     * sebab lain tak patut ditolak sebab tarikh tu.
      */
     $errors[] = 'Expiry date cannot be in the past.';
 }
@@ -106,8 +107,8 @@ $pricing = calculatePricing(
 );
 
 /*
- * surplus_since is stamped the moment an item enters surplus so
- * the Donations page can show how long it has been listed.
+ * surplus_since distem sebaik item tu masuk status surplus,
+ * supaya page Donations boleh tunjuk dah berapa lama ia disenaraikan.
  */
 $surplusSince = $pricing['status'] === 'surplus'
     ? date('Y-m-d')
@@ -132,9 +133,9 @@ try {
             exit;
         }
         /*
-         * A new upload replaces the old file, and the checkbox
-         * clears it. Either way the previous file is deleted so
-         * the folder does not fill with orphans.
+         * Upload baru gantikan fail lama, dan checkbox "remove"
+         * padam dia terus. Dua-dua keadaan ni, fail lama dipadam
+         * supaya folder tak penuh dengan fail orphan (tak dipakai).
          */
         $imageFile = $existing['image_file'];
 
@@ -176,7 +177,8 @@ try {
             header('Location: ../edit-item.php?id=' . (int) $itemId);
             exit;
         }
-        // Keep the original surplus date if it was already set.
+        // Kekalkan tarikh surplus asal kalau ia dah ditetapkan
+        // sebelum ni (jangan reset bila item tu diedit semula).
         if (
             $pricing['status'] === 'surplus'
             && $existing['surplus_since'] !== null
@@ -229,10 +231,10 @@ try {
         setFlash('listing_success', $productName . ' was updated.');
 
         /*
-         * An edit can push an item straight into surplus (for example
-         * the expiry date is moved into the donation window). The
-         * status engine then sees it as already-surplus and never
-         * fires the alert, so the NGO notification is sent here.
+         * Edit boleh terus tolak item masuk surplus (cth tarikh
+         * luput ditukar ke dalam tetingkap surplus). Enjin status
+         * nampak ia dah surplus dari awal lagi, jadi dia tak
+         * trigger notifikasi — jadi notifikasi tu dihantar di sini.
          */
         if (
             $pricing['status'] === 'surplus'
@@ -293,16 +295,17 @@ try {
 
                 $newItemId = (int) $pdo->lastInsertId();
 
-        // Saved after insert so the file name can carry the item id.
+        // Disimpan SELEPAS insert supaya nama fail boleh guna item id.
         [$uploadedName, $uploadError] = saveProductImage(
             $_FILES['product_image'] ?? [],
             $newItemId
         );
 
         /*
-         * The row has to exist before the file can be named after
-         * it, so a rejected upload leaves an unwanted row behind.
-         * It is removed here rather than left in the inventory.
+         * Baris produk kena wujud dulu sebelum fail boleh dinamakan
+         * ikut id dia, jadi kalau upload ditolak, baris yang tak
+         * diguna tu ditinggalkan — ia dibuang di sini, bukan
+         * dibiarkan terus dalam inventory.
          */
         if ($uploadError) {
             $undoStatement = $pdo->prepare(
@@ -336,9 +339,10 @@ try {
         }
 
          /*
-         * An item added within the donation window is surplus from
-         * birth, so the status engine never sees a change and never
-         * fires the alert. It has to be sent here instead.
+         * Item yang ditambah terus dalam tetingkap surplus adalah
+         * surplus sejak "lahir", jadi enjin status tak nampak
+         * sebarang perubahan dan tak trigger notifikasi. Jadi ia
+         * kena dihantar di sini sebagai ganti.
          */
         if ($pricing['status'] === 'surplus') {
             $businessName = $_SESSION['entity_name'] ?? 'A merchant';

@@ -6,6 +6,8 @@ require_once __DIR__ . '/../includes/functions.php';
 
 requireRole('merchant');
 
+// Ralat & input lama (kalau submit sebelum ni gagal validation)
+// dibaca sekali sahaja dari flash, untuk isi balik form.
 $errors = getFlash('form_errors', []);
 $old = getFlash('form_old', []);
 
@@ -111,6 +113,8 @@ require __DIR__ . '/../includes/layouts/header.php';
 </div>
 
 <script>
+    // Papar preview gambar terus (sebelum submit) guna FileReader,
+    // tanpa perlu upload ke server dulu.
     function previewImage(input) {
         const preview = document.getElementById('imagePreview');
 

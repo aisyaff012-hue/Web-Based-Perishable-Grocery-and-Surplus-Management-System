@@ -12,8 +12,9 @@ $merchantId = $_SESSION['user_id'];
 $notifications = getNotifications($pdo, $merchantId);
 
 /*
- * Read after fetching, so anything new is still highlighted on
- * this visit and only appears read from the next one.
+ * Tanda dah dibaca SELEPAS diambil (bukan sebelum), supaya
+ * notifikasi baru masih highlight pada kunjungan ni, dan cuma
+ * nampak "dah dibaca" pada kunjungan seterusnya.
  */
 markNotificationsRead($pdo, $merchantId);
 

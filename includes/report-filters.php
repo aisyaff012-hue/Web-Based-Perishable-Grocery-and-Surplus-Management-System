@@ -1,5 +1,7 @@
 <?php
 
+// Sahkan format tarikh (YYYY-MM-DD); pulangkan null kalau kosong
+// atau format/tarikh tak sah (elak query dengan tarikh karut).
 function validDate(?string $value): ?string
 {
     $value = trim((string) $value);
@@ -18,13 +20,16 @@ function validDate(?string $value): ?string
 $filterStart = validDate($_GET['start'] ?? null);
 $filterEnd = validDate($_GET['end'] ?? null);
 
-// A backwards range is a typo, not an empty report.
+// Julat terbalik (start lepas end) tu silap taip, bukan maksud
+// report kosong — jadi kita tukar balik posisi dia.
 if ($filterStart && $filterEnd && $filterStart > $filterEnd) {
     [$filterStart, $filterEnd] = [$filterEnd, $filterStart];
 }
 
 $filterCategory = $_GET['category'] ?? 'all';
 
+// Kalau kategori yang dihantar tak wujud dalam senarai sah,
+// abaikan je — jatuh balik ke 'all'.
 if (
     $filterCategory !== 'all'
     && !in_array($filterCategory, productCategories(), true)
@@ -37,9 +42,9 @@ $filterActive = $filterStart !== null
     || $filterCategory !== 'all';
 
 /*
- * The date column differs per query — surplus_since for stock,
- * request_date for reservations — so it is passed in rather
- * than hard-coded.
+ * Lajur tarikh berbeza ikut query — surplus_since untuk stok,
+ * request_date untuk tempahan — jadi ia dihantar sebagai
+ * parameter, bukan hard-code.
  */
 function filterClause(string $dateColumn, string $categoryColumn = 'inventory.category'): string
 {
@@ -62,6 +67,8 @@ function filterClause(string $dateColumn, string $categoryColumn = 'inventory.ca
     return $parts ? ' AND ' . implode(' AND ', $parts) : '';
 }
 
+// Nilai placeholder (?) untuk filterClause(), ikut turutan yang
+// sama macam syarat dibina di atas — kena sepadan bila di-bind.
 function filterValues(): array
 {
     global $filterStart, $filterEnd, $filterCategory;
@@ -83,6 +90,8 @@ function filterValues(): array
     return $values;
 }
 
+// Query string untuk filter semasa, supaya ia boleh dikekalkan
+// bila user klik link lain (cth export, pagination) pada page ni.
 $filterQuery = http_build_query(array_filter([
     'start' => $filterStart,
     'end' => $filterEnd,
@@ -91,6 +100,8 @@ $filterQuery = http_build_query(array_filter([
 
 $filterLabel = 'All records';
 
+// Bina label ringkas (cth "1 Jan 2026 to 31 Jan 2026 · Bakery")
+// untuk tunjuk kat UI filter mana yang sedang aktif.
 if ($filterActive) {
     $bits = [];
 

@@ -19,10 +19,11 @@ if (!in_array($tab, ['available', 'reserved', 'collected', 'expired'], true)) {
 $available = availableQuantitySql();
 
 /*
- * One query serves all four tabs. Each surplus item carries its
- * open quantity plus a summary of its reservations, and the tab
- * simply decides which rows to show.
+ * Satu query je sediakan data untuk semua 4 tab. Setiap item
+ * surplus bawa kuantiti terbuka dia sekali dengan ringkasan
+ * tempahan dia, dan tab cuma pilih baris mana nak dipaparkan.
  */
+
 $surplusStatement = $pdo->prepare(
     "SELECT
         inventory.item_id,
@@ -96,6 +97,9 @@ $tabbed = [
     'expired' => []
 ];
 
+// Satu item boleh masuk LEBIH DARI SATU tab sekaligus (cth: separuh
+// dah dikutip + separuh lagi masih available) — jadi setiap tab
+// disemak secara berasingan, bukan if/elseif tunggal.
 foreach ($allItems as $row) {
     if ((int) $row['completed_count'] > 0) {
         $tabbed['collected'][] = $row;
@@ -116,9 +120,9 @@ foreach ($allItems as $row) {
     }
 
     /*
-     * Only items that actually went to waste belong here. One
-     * that expired after every unit was collected was a success,
-     * not a loss, and showing it would distort the waste count.
+     * Hanya item yang betul-betul terbazir masuk sini. Item yang
+     * luput SELEPAS semua unitnya berjaya dikutip adalah kejayaan,
+     * bukan kerugian — papar dia di sini akan herotkan angka wasted.
      */
     if (
         $row['status'] === 'expired'
@@ -131,8 +135,8 @@ foreach ($allItems as $row) {
 $items = $tabbed[$tab];
 
 /*
- * The Expired tab is the honest counterpart to the other three:
- * it reports what the system did not manage to redistribute.
+ * Tab Expired ni "rakan jujur" kepada tiga tab lain: ia laporkan
+ * apa yang sistem GAGAL agihkan, melengkapkan cerita penuh.
  */
 $totalWasted = 0;
 
@@ -195,6 +199,9 @@ require __DIR__ . '/../includes/layouts/header.php';
                 <div class="surplus-grid page-merchant-surplus">
             <?php foreach ($items as $row): ?>
                 <?php
+                // Badge kad ni BUKAN terus guna $row['status'] — ia ikut
+                // konteks tab semasa (cth tab Collected tunjuk "Collected"
+                // walaupun status DB item tu masih 'surplus').
                 if ($tab === 'expired') {
                     $label = 'Expired';
                     $badge = 'expired';

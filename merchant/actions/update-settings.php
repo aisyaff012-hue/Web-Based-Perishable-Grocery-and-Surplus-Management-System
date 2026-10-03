@@ -22,6 +22,9 @@ if (!verifyCsrfToken($_POST['csrf_token'] ?? null)) {
 
 $errors = [];
 
+// Satu action menguruskan 3 form berasingan (pricing, notifications,
+// password) dari settings.php — $section tentukan cabang mana nak
+// jalan, supaya simpan satu form tak sentuh dua form lain.
 try {
     if ($section === 'pricing') {
         $nearExpiryDays = filter_input(INPUT_POST, 'near_expiry_days', FILTER_VALIDATE_INT);
@@ -41,8 +44,9 @@ try {
         }
 
         /*
-         * Surplus must come after near expiry in the lifecycle,
-         * otherwise items would skip the reduced-value stage.
+         * Surplus kena datang SELEPAS near_expiry dalam lifecycle,
+         * kalau tidak item akan terlangkau terus fasa nilai dikurangkan
+         * (available terus jadi surplus, tak lalu near_expiry dulu).
          */
         if (!$errors && $threshold >= $nearExpiryDays) {
             $errors[] = 'Surplus trigger must be fewer days than near expiry.';
@@ -69,7 +73,8 @@ try {
             $merchantId
         ]);
 
-        // Apply the new rules to existing stock straight away.
+        // Terapkan peraturan baru pada stok sedia ada serta-merta
+        // (force=true), bukan tunggu refresh berjadual seterusnya.
         refreshInventoryStatus($pdo, true);
 
         setFlash('settings_success', 'Pricing rules updated and applied to your inventory.');

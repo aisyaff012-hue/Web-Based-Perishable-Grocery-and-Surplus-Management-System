@@ -20,8 +20,9 @@ if (!in_array($statusFilter, $validStatuses, true)) {
     $statusFilter = 'pending';
 }
 /*
- * One pass for every tab count, so the tabs can show what is
- * waiting without four separate queries.
+ * Satu query untuk kira semua jumlah tab sekali gus, supaya tab
+ * boleh papar berapa banyak yang menunggu tanpa perlu 4 query
+ * berasingan.
  */
 $countStatement = $pdo->prepare(
     "SELECT
@@ -49,9 +50,9 @@ if ($statusFilter !== 'all') {
 }
 
 /*
- * One box searches both the NGO and the product, since a merchant
- * looking for a request remembers one or the other, not which
- * field it lives in.
+ * Satu kotak carian untuk cari NGO DAN produk sekali, sebab
+ * merchant yang cari satu request biasanya ingat salah satu je
+ * (nama NGO atau nama produk), bukan field mana ia disimpan.
  */
 if ($search !== '') {
     $conditions[] = '(users.organization_name LIKE ? OR inventory.product_name LIKE ?)';
@@ -271,6 +272,7 @@ require __DIR__ . '/../includes/layouts/header.php';
 </div>
 
 <script>
+    // Isi modal reject dengan id request yang diklik, baru papar modal.
     function openReject(requestId) {
         document.getElementById('rejectRequestId').value = requestId;
         document.getElementById('rejectModal').classList.add('modal-open');
@@ -280,6 +282,8 @@ require __DIR__ . '/../includes/layouts/header.php';
         document.getElementById('rejectModal').classList.remove('modal-open');
     }
 
+    // Isi modal confirm-collect dengan id request yang diklik, baru
+    // papar modal (sebelum tandakan reservation sebagai collected).
         function askCollect(requestId) {
         document.getElementById('collectRequestId').value = requestId;
         document.getElementById('collectModal').classList.add('modal-open');

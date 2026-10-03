@@ -15,10 +15,14 @@ $locationStatement = $pdo->prepare(
 $locationStatement->execute([$merchantId]);
 $myLocation = $locationStatement->fetch();
 
+// Dipakai untuk tunjuk reminder "tambah koordinat" kalau merchant
+// belum set lokasi (tanpa ni, merchant tak muncul dalam peta NGO).
 $hasCoordinates = $myLocation
     && $myLocation['latitude'] !== null
     && $myLocation['longitude'] !== null;
 
+// Ringkasan stat untuk 4 kad atas: jumlah item, near_expiry,
+// surplus. Dikira terus dalam SQL (lebih cepat dari loop PHP).
 $summaryStatement = $pdo->prepare(
     "SELECT
         COUNT(*) AS total_items,
@@ -42,6 +46,8 @@ $pendingStatement = $pdo->prepare(
 $pendingStatement->execute([$merchantId]);
 $pendingRequests = (int) $pendingStatement->fetchColumn();
 
+// Pratonton 7 produk terkini untuk jadual "Recent Listings" —
+// bukan senarai penuh, cuma gambaran ringkas kat dashboard.
 $recentStatement = $pdo->prepare(
     "SELECT
         product_name,
@@ -65,9 +71,9 @@ $recentStatement->execute([$merchantId]);
 $recentItems = $recentStatement->fetchAll();
 
 /*
- * Two feeds, two sources. activity_log is what the system
- * recorded about this shop; notifications is what it told the
- * merchant. They overlap but are not the same record.
+ * Dua feed, dua sumber. activity_log ialah apa yang sistem rekod
+ * pasal kedai ni; notifications pula apa yang sistem beritahu
+ * merchant. Dua-dua bertindih tapi bukan rekod yang sama.
  */
 $activityStatement = $pdo->prepare(
     "SELECT message, created_at
@@ -183,6 +189,9 @@ require __DIR__ . '/../includes/layouts/header.php';
                             <?php
                             $days = (int) $item['days_remaining'];
 
+                            // Kuantiti available dah habis (semua ditempah),
+                            // tapi status belum 'expired' — papar badge
+                            // "Out of Stock" khas, bukan status biasa.
                             $isOut = (int) $item['available_quantity'] <= 0
                                 && $item['status'] !== 'expired';
                             ?>

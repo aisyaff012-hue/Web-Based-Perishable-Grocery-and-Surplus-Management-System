@@ -24,7 +24,7 @@ $itemStatement = $pdo->prepare(
         base_price,
         expiry_date,
         description, 
-        image_file, category
+        image_file
      FROM inventory
      WHERE item_id = ?
        AND merchant_id = ?
@@ -44,7 +44,9 @@ if (!$item) {
 $errors = getFlash('form_errors', []);
 $old = getFlash('form_old', []);
 
-// Falls back to the stored value when the form was not rejected.
+// Isi field guna input lama ($old) kalau submit sebelum ni gagal
+// validation; kalau tidak, jatuh balik ke nilai yang tersimpan
+// dalam DB ($item) — jadi form sentiasa ada nilai untuk dipaparkan.
 $value = function (string $key) use ($old, $item) {
     return $old[$key] ?? $item[$key] ?? '';
 };
@@ -163,6 +165,8 @@ require __DIR__ . '/../includes/layouts/header.php';
 </div>
 
 <script>
+    // Papar preview gambar baru yang dipilih (sebelum submit),
+    // gantikan paparan gambar sedia ada buat sementara.
     function previewImage(input) {
         const preview = document.getElementById('imagePreview');
 

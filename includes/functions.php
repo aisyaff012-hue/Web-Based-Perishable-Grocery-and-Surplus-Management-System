@@ -1,29 +1,34 @@
 <?php
 
 /*
- * Shared helper functions for FreshTrack.
+ * Fungsi helper yang dikongsi oleh seluruh FreshTrack.
  */
 
 
 /* ============================================================
- * Output and formatting
+ * Output dan format
  * ============================================================ */
 
+// Escape output untuk elak XSS sebelum dipaparkan dalam HTML.
 function e(?string $value): string
 {
     return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 
+// Format nombor jadi harga, cth: 12.5 -> "RM 12.50".
 function formatCurrency(float $amount): string
 {
     return 'RM ' . number_format($amount, 2);
 }
 
+// Tukar status database (snake_case) jadi label senang baca,
+// cth: near_expiry -> "Near Expiry".
 function statusLabel(string $status): string
 {
     return ucwords(str_replace('_', ' ', $status));
 }
 
+// Tukar baki hari jadi teks: "Expired", "Today", atau "X day(s)".
 function formatDaysLeft(int $days): string
 {
     if ($days < 0) {
@@ -39,9 +44,10 @@ function formatDaysLeft(int $days): string
 
 
 /* ============================================================
- * Reference data
+ * Data rujukan
  * ============================================================ */
 
+// Senarai kategori produk yang dibenarkan (dropdown add/edit item).
 function productCategories(): array
 {
     return [
@@ -55,6 +61,7 @@ function productCategories(): array
     ];
 }
 
+// Senarai unit produk yang dibenarkan (dropdown add/edit item).
 function productUnits(): array
 {
     return ['units', 'kg', 'g', 'litre', 'packs', 'boxes', 'loaves'];
@@ -62,15 +69,15 @@ function productUnits(): array
 
 
 /* ============================================================
- * Display IDs and flash messages
+ * Display ID dan mesej flash
  * ============================================================ */
 
 /*
- * Builds the next display ID for a role, e.g. M001 or N001.
- * The number comes from the highest existing ID so the sequence
- * stays readable. A UNIQUE index on display_id protects against
- * two people registering at the same moment; the caller retries
- * when that happens.
+ * Jana display ID seterusnya untuk satu role, cth M001 atau N001.
+ * Nombor diambil dari display ID tertinggi yang sedia ada supaya
+ * urutan kekal senang dibaca. UNIQUE index pada display_id
+ * melindungi daripada dua orang register pada masa yang sama;
+ * pemanggil (caller) akan cuba lagi bila situasi tu berlaku.
  */
 function generateDisplayId(PDO $pdo, string $role): string
 {
@@ -93,12 +100,14 @@ function generateDisplayId(PDO $pdo, string $role): string
         . str_pad((string) $nextNumber, 3, '0', STR_PAD_LEFT);
 }
 
-// Stores a one-time message shown on the next page load.
+// Simpan mesej sekali guna untuk dipaparkan pada page load seterusnya.
 function setFlash(string $key, $value): void
 {
     $_SESSION['flash'][$key] = $value;
 }
 
+// Ambil mesej flash, terus padam supaya ia tak muncul lagi pada
+// page load yang berikutnya (sekali paparan sahaja).
 function getFlash(string $key, $default = null)
 {
     if (!isset($_SESSION['flash'][$key])) {
@@ -115,15 +124,16 @@ function getFlash(string $key, $default = null)
 /* ============================================================
  * Dynamic pricing
  * ============================================================
- * Rules come from merchant_settings so percentages can be
- * changed later without touching this code:
+ * Peraturan datang dari merchant_settings supaya peratusan boleh
+ * ditukar kemudian tanpa sentuh kod ni:
  *
- *   more than near_expiry_days   -> available,   full value
- *   near_expiry_days .. 4        -> near_expiry, reduced value
- *   donation_threshold_days      -> surplus,     free to NGOs
- *   past expiry date             -> expired,     no value
+ *   lebih dari near_expiry_days   -> available,   nilai penuh
+ *   near_expiry_days .. 4         -> near_expiry, nilai dikurangkan
+ *   donation_threshold_days       -> surplus,     percuma untuk NGO
+ *   tarikh luput dah lepas        -> expired,     tiada nilai
  */
 
+// Ambil tetapan pricing & notifikasi untuk satu merchant.
 function getMerchantSettings(PDO $pdo, int $merchantId): array
 {
     $statement = $pdo->prepare(
@@ -141,7 +151,7 @@ function getMerchantSettings(PDO $pdo, int $merchantId): array
     $statement->execute([$merchantId]);
     $settings = $statement->fetch();
 
-    // Fall back to defaults if the settings row is missing.
+    // Guna nilai default kalau baris settings tu tak wujud.
     if (!$settings) {
         return [
             'near_expiry_days' => 5,
@@ -155,6 +165,8 @@ function getMerchantSettings(PDO $pdo, int $merchantId): array
     return $settings;
 }
 
+// Kira baki hari sampai tarikh luput (boleh jadi negatif kalau
+// tarikh tu dah lepas).
 function daysUntil(string $expiryDate): int
 {
     $today = new DateTime('today');
@@ -164,7 +176,7 @@ function daysUntil(string $expiryDate): int
 }
 
 /*
- * Works out status and value for a single item. Returns
+ * Kira status dan nilai semasa untuk satu item. Pulangkan
  * days_remaining, status, reduction_percentage, current_value.
  */
 function calculatePricing(
@@ -215,9 +227,10 @@ function calculatePricing(
 
 
 /* ============================================================
- * Activity log and notifications
+ * Log aktiviti dan notifikasi
  * ============================================================ */
 
+// Rekod satu entri aktiviti merchant (untuk paparan log/history).
 function logActivity(
     PDO $pdo,
     int $merchantId,
@@ -233,6 +246,7 @@ function logActivity(
     $statement->execute([$merchantId, $type, $message]);
 }
 
+// Cipta satu notifikasi untuk user tertentu (merchant atau NGO).
 function createNotification(
     PDO $pdo,
     int $userId,
@@ -256,7 +270,7 @@ function createNotification(
     ]);
 }
 
-// Alerts every active NGO that new surplus has been listed.
+// Maklumkan setiap NGO yang aktif bila ada surplus baru disenaraikan.
 function notifyAllNgos(
     PDO $pdo,
     string $title,
@@ -283,6 +297,8 @@ function notifyAllNgos(
     }
 }
 
+// Ambil senarai notifikasi user, belum dibaca dipaparkan dulu,
+// diikuti yang terbaru.
 function getNotifications(
     PDO $pdo,
     int $userId,
@@ -308,6 +324,7 @@ function getNotifications(
     return $statement->fetchAll();
 }
 
+// Kira jumlah notifikasi user yang belum dibaca (untuk badge).
 function getUnreadCount(PDO $pdo, int $userId): int
 {
     $statement = $pdo->prepare(
@@ -322,6 +339,7 @@ function getUnreadCount(PDO $pdo, int $userId): int
     return (int) $statement->fetchColumn();
 }
 
+// Tanda semua notifikasi belum dibaca milik user sebagai dah dibaca.
 function markNotificationsRead(PDO $pdo, int $userId): void
 {
     $statement = $pdo->prepare(
@@ -337,14 +355,14 @@ function markNotificationsRead(PDO $pdo, int $userId): void
 
 
 /* ============================================================
- * Reservation helpers
+ * Helper tempahan (reservation)
  * ============================================================ */
 
 /*
- * Quantity still open for reservation. Pending and approved
- * requests hold stock, and completed ones have already left the
- * premises, so all three are deducted. Only rejected requests
- * release their quantity back.
+ * Kuantiti yang masih terbuka untuk ditempah. Tempahan "pending"
+ * dan "approved" mengunci stok, dan "completed" pun dah keluar
+ * dari premis, jadi ketiga-tiganya ditolak. Hanya tempahan
+ * "rejected" lepaskan balik kuantiti dia.
  */
 function availableQuantitySql(): string
 {
@@ -352,22 +370,26 @@ function availableQuantitySql(): string
 }
 
 /* ============================================================
- * Automatic status engine
+ * Enjin status automatik
  * ============================================================
- * Rescans every item and moves it through the lifecycle:
+ * Scan semula setiap item dan gerakkan dia melalui lifecycle:
  *
  *   available -> near_expiry -> surplus -> expired
  *
- * Runs on any page load, merchant or NGO, so the system stays
- * current even when a merchant has not logged in for days.
- * A timestamp in system_state throttles it so it runs at most
- * once every few minutes instead of once per request.
- * 
- * boleh adjust masa dekat sini, in seconds. status refresh
+ * Jalan pada setiap page load, merchant atau NGO, supaya sistem
+ * sentiasa terkini walaupun merchant tu dah berhari-hari tak login.
+ * Satu timestamp dalam system_state throttle enjin ni supaya ia
+ * jalan paling banyak sekali setiap beberapa minit, bukan setiap
+ * request.
  */
 
+// Jarak masa minimum (saat) antara satu refresh status dengan
+// yang seterusnya. Boleh ubah nilai ni kalau nak enjin jalan
+// lebih kerap/kurang kerap.
 const STATUS_REFRESH_INTERVAL_SECONDS = 10;
 
+// Semak sama ada dah cukup masa sejak refresh status terakhir
+// dijalankan.
 function shouldRunRefresh(PDO $pdo): bool
 {
     $statement = $pdo->prepare(
@@ -388,6 +410,7 @@ function shouldRunRefresh(PDO $pdo): bool
         >= STATUS_REFRESH_INTERVAL_SECONDS;
 }
 
+// Catat waktu sekarang sebagai waktu refresh status terakhir.
 function markRefreshRan(PDO $pdo): void
 {
     $statement = $pdo->prepare(
@@ -400,13 +423,13 @@ function markRefreshRan(PDO $pdo): void
 }
 
 /*
- * The engine itself.
+ * Enjin sebenar.
  *
- * Notifications fire only on a genuine status change, otherwise
- * every page load would repeat the same alert. When an item
- * expires, whatever was never collected is recorded in
- * wasted_quantity so Reports can show what the system failed to
- * save, not only what it saved.
+ * Notifikasi hanya dihantar bila status betul-betul berubah,
+ * kalau tidak setiap page load akan ulang mesej yang sama.
+ * Bila item luput, kuantiti yang tak sempat dikutip direkod
+ * dalam wasted_quantity supaya Reports boleh tunjuk apa yang
+ * sistem GAGAL selamatkan, bukan setakat apa yang berjaya.
  */
 function refreshInventoryStatus(PDO $pdo, bool $force = false): void{
     if (!$force && !shouldRunRefresh($pdo)) {
@@ -473,10 +496,10 @@ function refreshInventoryStatus(PDO $pdo, bool $force = false): void{
         $newStatus = $pricing['status'];
 
         /*
-         * The status alone is not enough to decide whether a write
-         * is needed. A merchant who changes the reduction
-         * percentage leaves every status untouched but every price
-         * out of date, so the calculated figures are compared too.
+         * Status sahaja tak cukup untuk tentukan sama ada write
+         * perlu dibuat. Merchant yang tukar reduction percentage
+         * tak sentuh status langsung, tapi semua harga jadi
+         * outdated — jadi nilai yang dikira pun kena dibanding.
          */
         $statusChanged = $oldStatus !== $newStatus;
 
@@ -493,11 +516,12 @@ function refreshInventoryStatus(PDO $pdo, bool $force = false): void{
         $expiredAt = null;
 
         /*
-         * Everything below this point is a consequence of a status
-         * change: stamping the surplus date, closing reservations,
-         * recording waste, logging and alerting. A price-only
-         * recalculation must skip all of it, or a settings change
-         * would fire the same notifications a second time.
+         * Semua di bawah ni adalah kesan daripada perubahan status:
+         * stem tarikh surplus, tutup tempahan terbuka, rekod
+         * pembaziran, log dan hantar notifikasi. Pengiraan semula
+         * harga sahaja (tanpa tukar status) kena langkau semua ni,
+         * kalau tidak tukar settings pun akan trigger notifikasi
+         * yang sama berulang kali.
          */
         if ($statusChanged) {
 
@@ -506,9 +530,9 @@ function refreshInventoryStatus(PDO $pdo, bool $force = false): void{
         }
 
                 /*
-         * An item cannot be collected once it has expired, so any
-         * reservation still open is closed here rather than left
-         * blocking the quantity forever.
+         * Item yang dah luput tak boleh dikutip lagi, jadi mana-mana
+         * tempahan yang masih terbuka ditutup di sini — bukan
+         * dibiarkan terus mengunci kuantiti selama-lamanya.
          */
         if ($newStatus === 'expired') {
             $openStatement = $pdo->prepare(
@@ -679,14 +703,14 @@ function refreshInventoryStatus(PDO $pdo, bool $force = false): void{
 
 /*
  * ============================================================
- * Presentation helpers
+ * Helper paparan (presentation)
  * ============================================================
  */
 
 /*
- * Category icons stand in for product photos. They cost the
- * merchant nothing to maintain and avoid the security surface
- * that file uploads would open up.
+ * Ikon kategori jadi ganti gambar produk. Tak membebankan merchant
+ * untuk uruskan, dan elak risiko keselamatan yang timbul kalau
+ * paksa setiap produk upload gambar.
  */
 function categoryIcon(string $category): string
 {
@@ -703,7 +727,8 @@ function categoryIcon(string $category): string
     return $icons[$category] ?? $icons['Other'];
 }
 
-// Colour band for the days-remaining hint under an expiry date.
+// Kelas warna untuk petunjuk baki hari di bawah tarikh luput
+// (cth: merah bila dah urgent, hijau bila masih lama).
 function daysUrgencyClass(int $days): string
 {
     if ($days < 0) {
@@ -727,10 +752,11 @@ function daysUrgencyClass(int $days): string
 
 /*
  * ============================================================
- * Product image uploads
+ * Upload gambar produk
  * ============================================================
- * Images are optional. When none is stored the category icon is
- * shown instead, so no page ever renders an empty cell.
+ * Gambar bersifat pilihan (optional). Kalau tiada gambar
+ * disimpan, ikon kategori dipaparkan sebagai ganti, jadi tiada
+ * page langsung papar sel yang kosong.
  */
 
 define('UPLOAD_MAX_BYTES', 2097152);
@@ -746,7 +772,8 @@ function productImageUrl(?string $fileName): ?string
         return null;
     }
 
-    // Guard against a stored name pointing outside the folder.
+    // Jaga-jaga kalau nama fail yang tersimpan cuba rujuk ke luar
+    // folder upload (path traversal).
     if (basename($fileName) !== $fileName) {
         return null;
     }
@@ -759,8 +786,8 @@ function productImageUrl(?string $fileName): ?string
 }
 
 /*
- * Renders the product thumbnail: the uploaded photo when one
- * exists, otherwise the category icon.
+ * Papar thumbnail produk: gambar yang diupload kalau ada,
+ * kalau tidak papar ikon kategori sebagai ganti.
  */
 function productThumbnail(
     ?string $fileName,
@@ -792,14 +819,15 @@ function deleteProductImage(?string $fileName): void
 }
 
 /*
- * Validates and stores an uploaded image.
+ * Sahkan dan simpan gambar yang diupload.
  *
- * The file type is confirmed with getimagesize() rather than the
- * extension or the browser-supplied MIME type, because both can
- * be faked. The stored name is generated here and never derived
- * from user input.
+ * Jenis fail disahkan guna getimagesize() bukan extension atau
+ * MIME type yang dihantar browser, sebab dua-dua tu boleh
+ * dipalsukan. Nama fail yang disimpan dijana di sini sahaja,
+ * tak pernah diambil terus dari input user.
  *
- * Returns [fileName, error]. Both are null when no file was sent.
+ * Pulangkan [fileName, error]. Dua-dua null kalau tiada fail
+ * dihantar.
  */
 function saveProductImage(array $file, int $itemId): array
 {
@@ -852,8 +880,9 @@ function saveProductImage(array $file, int $itemId): array
     return [$fileName, null];
 }
 /*
- * Fixed colour per category so a slice keeps the same hue on
- * every chart, rather than shifting with the ordering.
+ * Warna tetap untuk setiap kategori, supaya satu slice dalam
+ * chart kekal warna yang sama setiap kali, bukan bertukar-tukar
+ * ikut susunan data.
  */
 function categoryColour(string $category): string
 {
@@ -871,9 +900,10 @@ function categoryColour(string $category): string
 }
 
 /*
- * Haversine distance in kilometres, expressed as SQL so the
- * database can both sort and filter by it in one pass.
- * Placeholders are bound in this order: lat, lng, lat.
+ * Formula Haversine untuk jarak dalam kilometer, ditulis terus
+ * sebagai SQL supaya database boleh sort DAN filter ikut jarak
+ * dalam satu pass sahaja. Placeholder diikat ikut urutan ni:
+ * lat, lng, lat.
  */
 function distanceKmSql(string $latColumn = 'users.latitude', string $lngColumn = 'users.longitude'): string
 {
@@ -887,7 +917,7 @@ function distanceKmSql(string $latColumn = 'users.latitude', string $lngColumn =
 }
 
 /*
- * Turns 0.4 into "400 m" and 12.37 into "12.4 km".
+ * Tukar 0.4 jadi "400 m" dan 12.37 jadi "12.4 km".
  */
 function formatDistance(?float $km): string
 {
@@ -903,9 +933,9 @@ function formatDistance(?float $km): string
 }
 
 /*
- * Trims an opening-hours string for a card. Day names and times
- * are shortened; anything still too long is cut at a word
- * boundary. The full text stays in the tooltip.
+ * Pendekkan teks waktu operasi untuk dipaparkan pada kad. Nama
+ * hari dan waktu dipendekkan; apa-apa yang masih terlalu panjang
+ * dipotong pada sempadan perkataan. Teks penuh kekal dalam tooltip.
  */
 function shortHours(?string $hours): string
 {
@@ -937,7 +967,7 @@ function shortHours(?string $hours): string
 }
 
 /* ============================================================
- * Shop photos
+ * Gambar kedai (shop photos)
  * ============================================================ */
 
 function shopImageDirectory(): string
@@ -972,12 +1002,13 @@ function deleteShopImage(?string $fileName): void
 }
 
 /*
- * Same validation path as saveProductImage(): the type is
- * confirmed with getimagesize() rather than the extension or
- * the browser-supplied MIME type, and the stored name is
- * generated here, never taken from user input.
+ * Laluan pengesahan sama macam saveProductImage(): jenis fail
+ * disahkan guna getimagesize() bukan extension atau MIME type
+ * dari browser, dan nama fail yang disimpan dijana di sini
+ * sahaja, tak pernah diambil terus dari input user.
  *
- * Returns [fileName, error]. Both null when no file was sent.
+ * Pulangkan [fileName, error]. Dua-dua null kalau tiada fail
+ * dihantar.
  */
 function saveShopImage(array $file, int $merchantId): array
 {
@@ -1024,8 +1055,8 @@ function saveShopImage(array $file, int $merchantId): array
 }
 
 /*
- * Renders the shop cover: the uploaded photo when one exists,
- * otherwise a lettered circle built from the business name.
+ * Papar cover kedai: gambar yang diupload kalau ada, kalau tidak
+ * bulatan berhuruf dibina daripada nama perniagaan.
  */
 function shopCover(?string $fileName, string $businessName, string $extraClass = ''): string
 {
@@ -1043,12 +1074,12 @@ function shopCover(?string $fileName, string $businessName, string $extraClass =
 }
 
 /**
- * Build a Google Maps link for a merchant.
+ * Bina link Google Maps untuk satu merchant.
  *
- * Coordinates are used when available because they point at the
- * exact spot; the street address is the fallback. The pickup
- * note ("Main Entrance") is only an instruction once you are
- * there, so it is never used for navigation.
+ * Koordinat digunakan dulu kalau ada, sebab ia tunjuk lokasi
+ * tepat; alamat jalan jadi fallback. Nota pickup (cth "Main
+ * Entrance") cuma arahan bila dah sampai di situ, jadi ia tak
+ * sekali-kali digunakan untuk navigasi.
  */
 function mapLink(
     ?string $address,
@@ -1071,9 +1102,9 @@ function mapLink(
 }
 
 /*
- * Inline SVG icons for the sidebar. Kept as markup rather than
- * image files so they inherit the link colour and stay crisp
- * when the sidebar collapses.
+ * Ikon SVG inline untuk sidebar. Dikekalkan sebagai markup
+ * (bukan fail imej) supaya ia ikut warna link dan kekal tajam
+ * walaupun sidebar collapse.
  */
 function navIcon(string $key): string
 {
@@ -1101,18 +1132,18 @@ function navIcon(string $key): string
         . $shape . '</svg>';
 }
 /*
- * Splits an opening-hours string at each day prefix so a shop
- * with separate weekday and weekend hours reads as separate
- * lines rather than one run-on sentence.
+ * Pisahkan teks waktu operasi pada setiap awalan hari, supaya
+ * kedai yang ada waktu hari biasa dan hujung minggu berasingan
+ * dipaparkan sebagai baris berasingan, bukan satu ayat panjang.
  */
 function hoursLines(?string $hours): array
 {
     $short = shortHours($hours);
 
     /*
-     * Only split where a day name follows a space — a day inside a
-     * range like "Mon–Sat" is preceded by a dash, so the range
-     * stays intact.
+     * Hanya pisah bila nama hari didahului ruang (space) — hari
+     * dalam julat macam "Mon–Sat" didahului tanda sempang, jadi
+     * julat tu kekal utuh (tak terpisah).
      */
     $parts = preg_split(
         '/(?<=\s)(?=(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s*:)/',
@@ -1124,8 +1155,8 @@ function hoursLines(?string $hours): array
     return array_map('trim', $parts);
 }
 /*
- * Splits opening hours into lines without shortening them, for
- * places with room for the full wording.
+ * Pisahkan waktu operasi jadi baris tanpa dipendekkan, untuk
+ * tempat yang ada ruang untuk teks penuh.
  */
 function hoursLinesFull(?string $hours): array
 {
@@ -1138,9 +1169,9 @@ function hoursLinesFull(?string $hours): array
     $days = 'Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday';
 
     /*
-     * Split only where a new day block starts. A day that follows
-     * a dash or the word "to" is the end of a range, not the start
-     * of a new line.
+     * Pisah hanya di tempat blok hari baru bermula. Hari yang
+     * didahului tanda sempang atau perkataan "to" adalah hujung
+     * satu julat, bukan permulaan baris baru.
      */
     $parts = preg_split(
         '/(?<=\s)(?<![–—-]\s)(?<!to\s)(?=(?:' . $days . ')\s*:)/u',

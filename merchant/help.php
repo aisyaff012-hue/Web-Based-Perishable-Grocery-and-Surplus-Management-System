@@ -7,9 +7,9 @@ require_once __DIR__ . '/../includes/functions.php';
 requireRole('merchant');
 
 /*
- * The thresholds shown in the guide are read from the merchant's
- * own settings rather than hard-coded, so the help text stays
- * true after they change the rules.
+ * Ambang (threshold) yang dipaparkan dalam panduan ni dibaca dari
+ * tetapan merchant sendiri, bukan hard-code, supaya teks panduan
+ * kekal betul selepas merchant tukar peraturan dia.
  */
 $settings = getMerchantSettings($pdo, $_SESSION['user_id']);
 

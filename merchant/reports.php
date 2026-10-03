@@ -11,8 +11,8 @@ refreshInventoryStatus($pdo);
 $merchantId = $_SESSION['user_id'];
 
 /*
- * Stock figures are filtered by the date an item became surplus,
- * since that is when it entered the redistribution process.
+ * Angka stok ditapis ikut tarikh item tu jadi surplus, sebab
+ * itulah masa ia mula masuk proses pengagihan semula.
  */
 $stockFilter = filterClause('surplus_since', 'category');
 $stockValues = filterValues();
@@ -32,17 +32,18 @@ $summaryStatement->execute(array_merge([$merchantId], $stockValues));
 $summary = $summaryStatement->fetch();
 
 /*
- * Collection figures are filtered by the date the pickup was
- * confirmed, so a report for September counts what actually
- * left the premises in September.
+ * Angka kutipan pula ditapis ikut tarikh pickup disahkan, supaya
+ * report untuk bulan September kira apa yang betul-betul keluar
+ * dari premis dalam bulan September (bukan bila item tu listed).
  */
 $pickupFilter = filterClause('reservations.completed_at');
 $pickupValues = filterValues();
 
 /*
- * Value is measured at base price, not the reduced value: the
- * point is the market worth of food that did not go to waste,
- * and an expired item's current value is zero.
+ * Nilai diukur pada base_price, bukan nilai yang dah dikurangkan:
+ * tujuannya nak tunjuk nilai pasaran makanan yang berjaya
+ * diselamatkan daripada terbazir — dan nilai semasa item yang
+ * dah expired pun sifar (0), jadi base_price lebih bermakna di sini.
  */
 $collectedStatement = $pdo->prepare(
     "SELECT
@@ -92,10 +93,10 @@ $categoryStatement->execute(array_merge([$merchantId], $stockValues));
 $byCategory = $categoryStatement->fetchAll();
 
 /*
- * Daily rather than monthly: perishable stock turns over in
- * days, so a month-wide bucket hides the pattern the system
- * actually runs on. Without a date filter the chart falls back
- * to the last fortnight.
+ * Harian, bukan bulanan: stok mudah rosak berubah dalam hitungan
+ * hari, jadi kumpulan sebulan akan sembunyikan corak sebenar
+ * sistem ni berfungsi. Tanpa filter tarikh, chart jatuh balik ke
+ * dua minggu (14 hari) terkini.
  */
 $chartWindow = ($filterStart === null && $filterEnd === null)
     ? ' AND reservations.completed_at >= DATE_SUB(CURDATE(), INTERVAL 14 DAY)'
@@ -122,9 +123,9 @@ $dailyStatement->execute(array_merge([$merchantId], $pickupValues));
 $daily = $dailyStatement->fetchAll();
 
 /*
- * Which products actually moved the most food. Ranked by
- * quantity collected, so it reflects redistribution rather
- * than how much was listed.
+ * Produk mana yang betul-betul agihkan makanan paling banyak.
+ * Disusun ikut kuantiti yang dikutip (bukan berapa banyak yang
+ * disenaraikan), supaya ia cerminkan pengagihan sebenar.
  */
 $topStatement = $pdo->prepare(
     "SELECT
@@ -150,6 +151,8 @@ $topItems = $topStatement->fetchAll();
 
 $totalSurplusCount = (int) $summary['total_surplus'];
 
+// Nilai tertinggi dalam data harian — jadi skala paksi-Y untuk
+// bar chart (supaya bar paling tinggi isi 100% ketinggian chart).
 $maxDaily = 0;
 
 foreach ($daily as $day) {
@@ -294,6 +297,8 @@ require __DIR__ . '/../includes/layouts/header.php';
                                 <?php
                                 $quantity = (int) $day['collected_quantity'];
 
+                                // Tinggi bar ikut nisbah terhadap $maxDaily, dengan
+                                // minimum 6% supaya bar bernilai kecil pun tetap nampak.
                                 $height = $maxDaily > 0
                                     ? max(6, round($quantity / $maxDaily * 100))
                                     : 6;
@@ -330,6 +335,9 @@ require __DIR__ . '/../includes/layouts/header.php';
                 </div>
             <?php else: ?>
                 <?php
+                // Donut chart dilukis guna bulatan SVG dengan stroke-dasharray:
+                // setiap kategori dapat satu "segmen" sepanjang lilitan
+                // bulatan, mengikut nisbah dia terhadap jumlah keseluruhan.
                 $radius = 60;
                 $circumference = 2 * M_PI * $radius;
                 $offset = 0;

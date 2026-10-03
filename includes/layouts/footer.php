@@ -1,4 +1,4 @@
-        </main>
+</main>
     </div>
 </div>
 
@@ -34,9 +34,10 @@
         document.getElementById('logoutModal').classList.remove('modal-open');
     }
         /*
-     * The collapsed state is kept in a cookie so it survives
-     * navigation — every page is a fresh request, so without it
-     * the sidebar would reopen on each click.
+     * Status collapse sidebar disimpan dalam cookie supaya ia
+     * kekal walaupun pindah page — setiap page adalah request
+     * baru, jadi tanpa cookie ni sidebar akan terbuka semula
+     * setiap kali diklik.
      */
     function toggleSidebar() {
         var shell = document.querySelector('.shell');
@@ -47,7 +48,7 @@
     }
 
     /*
-     * Live notification polling.
+     * Polling notifikasi secara live.
      */
     (function () {
         const pollUrl = '<?= BASE_URL ?>/api/notification-count.php';
@@ -63,9 +64,9 @@
         let hideTimer = null;
 
         /*
-         * Browsers block audio until the user interacts with the
-         * page. Priming the element on the first interaction lets
-         * later plays go through.
+         * Browser sekat bunyi (audio) sampai user buat interaksi
+         * dengan page dulu. "Prime" elemen audio pada interaksi
+         * pertama ni supaya play seterusnya boleh jalan.
          */
         function unlockAudio() {
             sound.volume = 0.5;
@@ -74,7 +75,7 @@
                 sound.pause();
                 sound.currentTime = 0;
             }).catch(function () {
-                // Still locked; the next interaction will retry.
+                // Masih locked; interaksi seterusnya akan cuba lagi.
             });
         }
 
@@ -86,7 +87,8 @@
             sound.currentTime = 0;
 
             sound.play().catch(function () {
-                // Blocked before any interaction; nothing to do.
+                // Disekat sebelum ada apa-apa interaksi; tiada apa
+                // boleh buat, abaikan je.
             });
         }
 
@@ -104,7 +106,7 @@
 
             hideTimer = setTimeout(function () {
                 toast.classList.remove('toast-open');
-            }, 6000);
+            }, 8000);
         }
 
         function updateBadge(count) {
@@ -159,7 +161,8 @@
                 updateBadge(count);
                 lastCount = count;
             } catch (error) {
-                // A failed poll is not worth interrupting the user.
+                // Satu poll gagal tak berbaloi nak ganggu user —
+                // abaikan je, cuba lagi pada poll seterusnya.
             }
         }
 

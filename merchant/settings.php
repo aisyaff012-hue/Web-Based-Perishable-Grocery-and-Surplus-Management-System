@@ -39,6 +39,12 @@ require __DIR__ . '/../includes/layouts/header.php';
 
 <div class="split-layout">
     <div class="form-panel">
+        <!-- Peraturan dynamic pricing — nilai ni terus kawal
+             calculatePricing() & refreshInventoryStatus() dalam
+             functions.php. Setiap form di page ni hantar ke
+             action yang sama (update-settings.php), dibezakan
+             oleh "section" supaya satu form boleh disimpan tanpa
+             sentuh dua form lain. -->
         <h3 class="form-section-title">Dynamic Pricing Rules</h3>
 
         <p class="stat-note rule-intro">These rules drive the automatic status engine. Every product is re-checked whenever the system runs.</p>
@@ -133,6 +139,10 @@ require __DIR__ . '/../includes/layouts/header.php';
             <h3>Current Rules</h3>
         </div>
 
+        <!-- Ringkasan peraturan semasa, dikira terus dari $settings
+             supaya sentiasa sepadan dengan nilai yang betul-betul
+             tersimpan — bukan teks statik yang boleh jadi tak tepat
+             lepas merchant ubah tetapan. -->
         <div class="panel-body">
             <div class="rule-line">
                 <span class="badge badge-available">Available</span>

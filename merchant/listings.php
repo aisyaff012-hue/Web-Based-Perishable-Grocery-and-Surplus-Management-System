@@ -18,13 +18,16 @@ $categoryFilter = $_GET['category'] ?? 'all';
 
 $validStatuses = ['all', 'available', 'near_expiry', 'surplus', 'expired'];
 
+// Kalau status dalam URL bukan salah satu yang sah, jatuh balik
+// ke 'all' (elak query dengan nilai status yang direka user).
 if (!in_array($statusFilter, $validStatuses, true)) {
     $statusFilter = 'all';
 }
 
 /*
- * Conditions are collected in an array so the WHERE clause is
- * built once, keeping every value bound as a parameter.
+ * Syarat-syarat dikumpul dalam array supaya klausa WHERE dibina
+ * sekali sahaja, dengan setiap nilai kekal di-bind sebagai
+ * parameter (elak SQL injection).
  */
 $conditions = ['merchant_id = ?', 'removed_at IS NULL'];
 $parameters = [$merchantId];
@@ -196,6 +199,9 @@ require __DIR__ . '/../includes/layouts/header.php';
 
                             <td>
                                 <?php
+                                // Kuantiti available dah habis (semua ditempah),
+                                // tapi status belum 'expired' — papar badge
+                                // "Out of Stock" khas, bukan status biasa.
                                 $isOut = (int) $item['available_quantity'] <= 0
                                     && $item['status'] !== 'expired';
                                 ?>
@@ -240,6 +246,8 @@ require __DIR__ . '/../includes/layouts/header.php';
 </div>
 
 <script>
+    // Isi modal confirm-delete dengan id & nama produk yang diklik,
+    // baru papar modal tu.
     function askDelete(itemId, productName) {
         document.getElementById('deleteItemId').value = itemId;
         document.getElementById('deleteItemName').textContent = productName;
