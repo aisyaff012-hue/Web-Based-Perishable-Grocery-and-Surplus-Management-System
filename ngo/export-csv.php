@@ -1,9 +1,9 @@
 <?php
 
 /*
- * Streams the NGO's collection record as CSV. Built in memory
- * and pushed straight to the browser, so there is no upload
- * folder to secure and no stale exports to clean up.
+ * Alirkan rekod kutipan NGO sebagai CSV. Dibina dalam memori dan
+ * terus dihantar ke browser, jadi tiada folder upload perlu
+ * dijaga dan tiada fail export lama yang perlu dibersihkan.
  */
 
 require_once __DIR__ . '/../includes/auth.php';
@@ -57,7 +57,7 @@ header('Content-Disposition: attachment; filename="' . $fileName . '"');
 
 $output = fopen('php://output', 'w');
 
-// Excel reads UTF-8 correctly only when the file starts with a BOM.
+// Excel baca UTF-8 dengan betul hanya kalau fail bermula dengan BOM.
 fwrite($output, "\xEF\xBB\xBF");
 
 fputcsv($output, [
@@ -89,6 +89,8 @@ foreach ($rows as $row) {
         $totalValue += $value;
     }
 
+    // $missed dikira tapi tak dipaparkan terus dalam baris TOTALS —
+    // ia hanya dipakai secara tak langsung melalui $concluded di bawah.
     if ($row['status'] === 'not_collected') {
         $missed++;
     }
@@ -113,9 +115,11 @@ foreach ($rows as $row) {
 }
 
 /*
- * The collection rate counts only reservations that reached an
- * outcome the NGO controlled: collected, or left until the item
- * expired. Rejections and cancellations are excluded.
+ * Kadar kutipan (collection rate) hanya kira reservation yang
+ * sampai ke keputusan yang NGO kawal: berjaya dikutip, atau
+ * dibiarkan sampai item tu luput. Rejection (ditolak merchant)
+ * dan cancellation (dibatalkan NGO sendiri) tak dikira — dua-dua
+ * tu bukan kegagalan NGO kutip barang.
  */
 $concluded = $totalCollected > 0 || $missed > 0
     ? count(array_filter($rows, function ($row) {

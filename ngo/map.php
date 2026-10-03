@@ -26,6 +26,9 @@ $myLng = $hasLocation ? (float) $me['longitude'] : null;
 
 $available = availableQuantitySql();
 
+// Query jarak hanya disertakan kalau NGO ada koordinat — tanpa
+// koordinat, lajur distance_km jadi NULL dan susunan jatuh balik
+// ikut tarikh luput terdekat (bukan ikut jarak).
 if ($hasLocation) {
     $distanceSelect = ', ' . distanceKmSql() . ' AS distance_km';
     $orderBy = 'ORDER BY distance_km ASC, inventory.expiry_date ASC';
@@ -67,9 +70,10 @@ $statement->execute($hasLocation ? [$myLat, $myLng, $myLat] : []);
 $rows = $statement->fetchAll();
 
 /*
- * One marker per merchant. The soonest expiry among a shop's
- * items decides the urgency colour of its pin, so a single
- * glance at the map shows where the pressure is.
+ * Satu penanda (marker) untuk setiap merchant. Tarikh luput
+ * TERDEKAT antara semua item kedai tu yang tentukan warna urgency
+ * pin dia, supaya sekali imbas pada peta terus nampak kawasan mana
+ * paling tertekan (urgent).
  */
 $merchants = [];
 
@@ -180,6 +184,7 @@ require __DIR__ . '/../includes/layouts/header.php';
             var bounds = [];
             var markers = [];
 
+            // Titik hijau untuk lokasi NGO sendiri (bukan pin merchant).
             if (myPosition) {
                 L.circleMarker(myPosition, {
                     radius: 9,
@@ -196,6 +201,8 @@ require __DIR__ . '/../includes/layouts/header.php';
                 return name.trim().charAt(0).toUpperCase();
             }
 
+            // Warna pin ikut tarikh luput item PALING awal kedai tu:
+            // merah (urgent) <= 1 hari, oren (soon) <= 2 hari, hijau lain.
             function urgencyClass(days) {
                 if (days <= 1) {
                     return 'pin-urgent';
@@ -225,6 +232,9 @@ require __DIR__ . '/../includes/layouts/header.php';
                     popupAnchor: [0, -54]
                 });
 
+                 // Popup tunjuk maksimum 3 item terus, selebihnya
+                 // diringkaskan jadi "+N more" supaya popup tak jadi
+                 // terlalu panjang.
                  var lines = shop.items.slice(0, 3).map(function (item) {
                     return '<li>'
                         + '<span class="pop-item">' + item.name + '</span>'
@@ -285,13 +295,14 @@ require __DIR__ . '/../includes/layouts/header.php';
             };
 
             /*
-             * The list arrives sorted by distance, so the first
-             * merchant is already the nearest one.
+             * Senarai merchants datang dah tersusun ikut jarak, jadi
+             * merchant pertama memang dah yang paling dekat.
              *
-             * The view is centred below the pin so the popup, which
-             * opens upward, lands inside the frame. Leaflet's own
-             * auto-pan is switched off for this one call, otherwise
-             * it would recentre and undo the offset.
+             * View dipusatkan SEDIKIT DI BAWAH pin supaya popup (yang
+             * terbuka ke atas) jatuh dalam bingkai (frame) yang
+             * kelihatan. Auto-pan Leaflet sendiri dimatikan untuk
+             * satu panggilan ni sahaja, kalau tidak ia akan
+             * pusatkan semula dan batalkan offset yang kita dah set.
              */
             window.goNearest = function () {
                 if (!markers.length) {
@@ -311,7 +322,8 @@ require __DIR__ . '/../includes/layouts/header.php';
                 popup.options.autoPan = false;
                 marker.openPopup();
 
-                // Restored so a normal click still pans the popup in.
+                // Dipulihkan balik supaya klik biasa tetap auto-pan
+                // popup masuk ke dalam skrin macam biasa.
                 setTimeout(function () {
                     popup.options.autoPan = true;
                 }, 300);

@@ -53,8 +53,9 @@ try {
     $pdo->beginTransaction();
 
     /*
-     * The row is locked while availability is checked so two NGOs
-     * reserving at the same moment cannot oversubscribe the item.
+     * Baris item dikunci (FOR UPDATE) semasa ketersediaan disemak,
+     * supaya dua NGO yang buat reservation pada saat yang sama
+     * tak boleh over-subscribe (tempah lebih dari baki yang ada).
      */
     $itemStatement = $pdo->prepare(
         "SELECT
@@ -105,10 +106,10 @@ try {
     }
 
     /*
-     * The form carries a min attribute, but that is a browser
-     * convenience and can be removed before the request is sent.
-     * The date is checked again here because this is the only
-     * point the system controls.
+     * Form ada attribute HTML "min" pada field tarikh, tapi tu
+     * cuma kemudahan browser dan boleh dibuang sebelum request
+     * dihantar (cth guna devtools). Tarikh disemak SEMULA di sini
+     * sebab inilah satu-satunya titik yang sistem betul-betul kawal.
      */
     if ($pickupDate < date('Y-m-d')) {
         $pdo->rollBack();
@@ -125,7 +126,7 @@ try {
         exit;
     }
 
-    // Collection cannot be scheduled after the food expires.
+    // Tarikh kutipan tak boleh dijadualkan SELEPAS makanan tu luput.
     if ($pickupDate > $item['expiry_date']) {
         $pdo->rollBack();
 
@@ -163,9 +164,9 @@ try {
     $organizationName = $_SESSION['entity_name'] ?? 'An NGO';
 
     /*
-     * The reservation itself is always saved and always appears on
-     * the merchant's Requests page. This setting controls only
-     * whether an in-app alert is raised for it.
+     * Reservation itu sendiri SENTIASA disimpan dan sentiasa muncul
+     * pada page Requests merchant. Tetapan ni cuma kawal sama ada
+     * notifikasi dalam-app dibangkitkan untuk ia atau tidak.
      */
     $merchantSettings = getMerchantSettings($pdo, (int) $item['merchant_id']);
 

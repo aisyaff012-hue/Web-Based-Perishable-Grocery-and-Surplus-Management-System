@@ -46,6 +46,9 @@ $itemStatement = $pdo->prepare(
 $itemStatement->execute([$itemId]);
 $item = $itemStatement->fetch();
 
+// Item tu mungkin dah ditempah habis oleh NGO lain, luput, atau
+// dibuang sejak link ni dijana — jadi disahkan semula di sini,
+// bukan percaya terus pada apa yang klik dari page sebelum ni.
 if (!$item || (int) $item['available_quantity'] < 1) {
     setFlash('reservation_error', 'This item is no longer available.');
     header('Location: surplus.php');

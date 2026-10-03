@@ -31,6 +31,9 @@ $profileStatement = $pdo->prepare(
 $profileStatement->execute([$ngoId]);
 $profile = $profileStatement->fetch();
 
+// Isi field guna input lama ($old) kalau submit sebelum ni gagal
+// validation; kalau tidak, jatuh balik ke nilai yang tersimpan
+// dalam DB ($profile).
 $field = function (string $key) use ($old, $profile) {
     return $old[$key] ?? $profile[$key] ?? '';
 };

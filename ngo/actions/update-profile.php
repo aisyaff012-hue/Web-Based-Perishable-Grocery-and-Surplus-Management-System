@@ -50,6 +50,9 @@ if ($address === '') {
     $errors[] = 'Address is required.';
 }
 
+// Email kena kekal unik merentasi SEMUA akaun KECUALI akaun sendiri
+// (user_id <> $ngoId) — kalau tidak, NGO tak boleh save profil dia
+// walaupun email tu memang email dia sendiri.
 if (!$errors) {
     $emailStatement = $pdo->prepare(
         "SELECT 1 FROM users WHERE email = ? AND user_id <> ? LIMIT 1"
@@ -101,6 +104,8 @@ try {
         $ngoId
     ]);
 
+    // Kemaskini session sekali, supaya header & ucapan "Welcome
+    // back" terus ikut nama/organisasi terkini tanpa perlu log out.
     $_SESSION['full_name'] = $fullName;
     $_SESSION['entity_name'] = $organizationName;
 

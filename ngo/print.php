@@ -1,9 +1,9 @@
 <?php
 
 /*
- * A print-ready view of the NGO's collection report. The browser
- * handles the PDF itself through its print dialogue, which keeps
- * the system free of a PDF library and its dependencies.
+ * Paparan sedia-cetak (print-ready) untuk collection report NGO.
+ * Browser sendiri yang uruskan PDF melalui dialog print dia,
+ * supaya sistem tak perlu library PDF berasingan dan dependency-nya.
  */
 
 require_once __DIR__ . '/../includes/auth.php';
@@ -30,6 +30,8 @@ $pickupValues = filterValues();
 $requestFilter = filterClause('reservations.request_date');
 $requestValues = filterValues();
 
+// Jumlah unit yang berjaya dikutip, dan anggaran nilai pasaran
+// makanan yang diterima (dikira pada base_price merchant).
 $collectedStatement = $pdo->prepare(
     "SELECT
         COALESCE(SUM(reservations.quantity_requested), 0) AS collected_quantity,
@@ -45,6 +47,9 @@ $collectedStatement = $pdo->prepare(
 $collectedStatement->execute(array_merge([$ngoId], $pickupValues));
 $collected = $collectedStatement->fetch();
 
+// Hanya kira reservation yang sampai ke keputusan dalam kawalan
+// NGO sendiri: berjaya dikutip (completed) atau dibiarkan sampai
+// luput (not_collected). Rejection & cancellation awal tak dikira.
 $followThroughStatement = $pdo->prepare(
     "SELECT
         COALESCE(SUM(reservations.status = 'completed'), 0) AS collected,
@@ -63,10 +68,14 @@ $followThrough = $followThroughStatement->fetch();
 $concluded = (int) $followThrough['collected']
     + (int) $followThrough['missed'];
 
+// Kadar kutipan (%) = berjaya dikutip dibahagi jumlah yang
+// "selesai" (collected + missed). null kalau belum ada yang
+// selesai lagi, untuk elak bahagi dengan 0.
 $collectionRate = $concluded > 0
     ? round((int) $followThrough['collected'] / $concluded * 100)
     : null;
 
+// Taburan kutipan ikut kategori, untuk jadual "Collected by Category".
 $categoryStatement = $pdo->prepare(
     "SELECT
         inventory.category,
@@ -84,6 +93,8 @@ $categoryStatement = $pdo->prepare(
 $categoryStatement->execute(array_merge([$ngoId], $pickupValues));
 $byCategory = $categoryStatement->fetchAll();
 
+// Senarai merchant yang pernah bekalkan surplus kepada NGO ni,
+// susun ikut jumlah unit terbanyak — untuk jadual "Merchant Partners".
 $sourceStatement = $pdo->prepare(
     "SELECT
         users.business_name,
@@ -105,6 +116,8 @@ $sourceStatement = $pdo->prepare(
 $sourceStatement->execute(array_merge([$ngoId], $pickupValues));
 $sources = $sourceStatement->fetchAll();
 
+// Sejarah PENUH reservation (semua status) dalam tempoh filter,
+// untuk jadual terperinci "Reservation History" di hujung report.
 $historyStatement = $pdo->prepare(
     "SELECT
         reservations.quantity_requested,

@@ -9,8 +9,9 @@ requireRole('ngo');
 $ngoId = $_SESSION['user_id'];
 
 /*
- * Only approved reservations need collecting. Anything pending,
- * rejected or already completed belongs on My Reservations.
+ * Hanya reservation berstatus 'approved' yang perlu dikutip.
+ * Yang pending, rejected atau dah completed semua tu letak di
+ * page My Reservations, bukan di sini.
  */
 $pickupStatement = $pdo->prepare(
     "SELECT
@@ -123,6 +124,8 @@ require __DIR__ . '/../includes/layouts/header.php';
                             </td>
 
                             <td>
+                                <?php /* Overdue = tarikh pickup dah lepas tapi NGO belum
+                                         kutip lagi (reservation masih 'approved'). */ ?>
                                 <?php if ($daysUntil < 0): ?>
                                     <span class="badge badge-rejected">Overdue</span>
                                 <?php elseif ($daysUntil === 0): ?>

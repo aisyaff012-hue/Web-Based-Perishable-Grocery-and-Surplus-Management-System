@@ -11,6 +11,9 @@ $ngoId = $_SESSION['user_id'];
 
 $notifications = getNotifications($pdo, $ngoId);
 
+// Tanda dah dibaca SELEPAS diambil (bukan sebelum), supaya
+// notifikasi baru masih highlight pada kunjungan ni, dan cuma
+// nampak "dah dibaca" pada kunjungan seterusnya.
 markNotificationsRead($pdo, $ngoId);
 
 $pageTitle = 'Notifications';

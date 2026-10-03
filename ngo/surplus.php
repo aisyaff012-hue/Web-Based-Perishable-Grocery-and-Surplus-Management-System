@@ -61,9 +61,9 @@ if ($categoryFilter !== 'all') {
 }
 
 /*
- * Distance is only computable once the NGO has saved its own
- * coordinates, so the expression is spliced in rather than
- * assumed — the page still works without it.
+ * Jarak cuma boleh dikira sekali NGO dah simpan koordinat dia
+ * sendiri, jadi expression tu disisip bersyarat (bukan diandaikan
+ * sentiasa ada) — page ni tetap berfungsi walaupun tanpa koordinat.
  */
 if ($hasLocation) {
     $distanceSelect = ', ' . distanceKmSql() . ' AS distance_km';
@@ -111,9 +111,9 @@ $statement->execute($bindings);
 $rows = $statement->fetchAll();
 
 /*
- * The listing works in two levels: a shop front first, then that
- * shop's items. Grouping happens here so both levels read from
- * the same query.
+ * Senarai ni berfungsi pada dua tahap: muka kedai (shop front)
+ * dulu, kemudian item-item kedai tu. Pengumpulan (grouping)
+ * berlaku di sini supaya dua-dua tahap baca dari query yang sama.
  */
 $merchants = [];
 
@@ -151,6 +151,9 @@ foreach ($rows as $row) {
 
 $merchants = array_values($merchants);
 
+// Penapis jarak (radius) dan susunan ikut jarak cuma relevan kalau
+// NGO ada koordinat — tanpa koordinat, $merchants kekal tersusun
+// ikut tarikh luput (dari query SQL) macam biasa.
 if ($hasLocation) {
     if ($radiusFilter !== 'all') {
         $limit = (int) $radiusFilter;
@@ -181,9 +184,9 @@ if ($merchantId) {
 }
 
 /*
- * How much this merchant has actually redistributed. Shown on
- * the shop header because it measures the thing the system
- * exists to do, not a popularity signal.
+ * Berapa banyak merchant ni DAH betul-betul agihkan makanan.
+ * Dipaparkan pada header kedai sebab ia ukur perkara yang sistem
+ * ni memang dicipta untuk buat, bukan sekadar isyarat popularity.
  */
 $savedQuantity = 0;
 
@@ -215,7 +218,7 @@ require __DIR__ . '/../includes/layouts/header.php';
 
 <?php if ($merchantId && $selected): ?>
 
-    <!-- ============ LEVEL 2: one merchant ============ -->
+    <!-- ============ TAHAP 2: satu merchant ============ -->
 
     <div class="shop-hero">
         <?= shopCover($selected['image'], $selected['name'], 'shop-hero-image') ?>
@@ -359,7 +362,7 @@ require __DIR__ . '/../includes/layouts/header.php';
 
 <?php else: ?>
 
-    <!-- ============ LEVEL 1: merchant list ============ -->
+    <!-- ============ TAHAP 1: senarai merchant ============ -->
 
     <section class="section-head">
         <div>

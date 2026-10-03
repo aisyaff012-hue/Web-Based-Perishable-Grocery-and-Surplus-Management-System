@@ -11,9 +11,9 @@ refreshInventoryStatus($pdo);
 $ngoId = $_SESSION['user_id'];
 
 /*
- * Requests are filtered by when they were made; collections by
- * when the pickup was confirmed. A September report therefore
- * counts what actually left the merchant in September.
+ * Request ditapis ikut bila ia DIBUAT; kutipan pula ditapis ikut
+ * bila pickup DISAHKAN. Jadi report untuk bulan September kira
+ * apa yang betul-betul keluar dari merchant dalam bulan September.
  */
 $requestFilter = filterClause('reservations.request_date');
 $requestValues = filterValues();
@@ -38,9 +38,10 @@ $summaryStatement->execute(array_merge([$ngoId], $requestValues));
 $summary = $summaryStatement->fetch();
 
 /*
- * Value is measured at base price, not the reduced value: the
- * point is the market worth of food that did not go to waste,
- * and an expired item's current value is zero.
+ * Nilai diukur pada base_price, bukan nilai yang dah dikurangkan:
+ * tujuannya nak tunjuk nilai pasaran makanan yang berjaya
+ * diselamatkan daripada terbazir — dan nilai semasa item yang
+ * dah expired pun sifar (0), jadi base_price lebih bermakna di sini.
  */
 $collectedStatement = $pdo->prepare(
     "SELECT
@@ -58,11 +59,11 @@ $collectedStatement->execute(array_merge([$ngoId], $pickupValues));
 $collected = $collectedStatement->fetch();
 
 /*
- * How reliably this NGO follows through. Reservations it made
- * that ended as not_collected are counted against it; ones the
- * merchant rejected are not, since that outcome was not the
- * NGO's to control, and cancellations are not either since
- * cancelling early releases the stock for someone else.
+ * Sejauh mana NGO ni boleh dipercayai "ikut janji". Reservation
+ * yang dia buat tapi berakhir not_collected dikira SALAH dia;
+ * yang ditolak merchant (rejected) TIDAK dikira, sebab keputusan
+ * tu bukan dalam kawalan NGO; cancellation pun tak dikira, sebab
+ * batal awal lepaskan stok untuk orang lain guna.
  */
 $followThroughStatement = $pdo->prepare(
     "SELECT
@@ -104,9 +105,10 @@ $categoryStatement->execute(array_merge([$ngoId], $pickupValues));
 $byCategory = $categoryStatement->fetchAll();
 
 /*
- * Daily rather than monthly: perishable stock turns over in
- * days, and an item only stays surplus for three, so a wider
- * bucket hides the rhythm the system actually runs on.
+ * Harian, bukan bulanan: stok mudah rosak berubah dalam hitungan
+ * hari, dan satu item cuma kekal surplus selama 3 hari, jadi
+ * kumpulan yang lebih luas akan sembunyikan corak sebenar sistem
+ * ni berfungsi.
  */
 $chartWindow = ($filterStart === null && $filterEnd === null)
     ? ' AND reservations.completed_at >= DATE_SUB(CURDATE(), INTERVAL 14 DAY)'
@@ -311,10 +313,11 @@ require __DIR__ . '/../includes/layouts/header.php';
             <?php else: ?>
                 <?php
                 /*
-                 * The ring is drawn with one circle per slice. Each
-                 * uses stroke-dasharray to show only its share of the
-                 * circumference, and stroke-dashoffset to rotate it
-                 * past the slices already drawn.
+                 * Cincin (ring) dilukis dengan satu bulatan SVG bagi
+                 * setiap slice. Setiap satu guna stroke-dasharray
+                 * untuk papar nisbah bahagian dia je sepanjang lilitan
+                 * bulatan, dan stroke-dashoffset untuk putar lepas
+                 * slice-slice yang dah dilukis sebelum ni.
                  */
                 $radius = 60;
                 $circumference = 2 * M_PI * $radius;

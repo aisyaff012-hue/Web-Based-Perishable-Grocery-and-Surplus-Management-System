@@ -11,6 +11,8 @@ $ngoId = $_SESSION['user_id'];
 
 $available = availableQuantitySql();
 
+// Jumlah keseluruhan item surplus yang masih ada baki kuantiti
+// (belum ditempah habis) dan belum luput — untuk kad stat "Available Surplus".
 $surplusStatement = $pdo->query(
     "SELECT COUNT(*)
      FROM inventory
@@ -37,15 +39,18 @@ $myLat = $hasLocation ? (float) $me['latitude'] : null;
 $myLng = $hasLocation ? (float) $me['longitude'] : null;
 
 /*
- * The nearest few merchants holding surplus. This is a shortcut
- * into the listing, not a replacement for it, so it stays short
- * and carries only what decides where to go first.
+ * Beberapa merchant terdekat yang ada surplus. Ni cuma pintasan
+ * (shortcut) ke senarai penuh, bukan ganti untuk page Surplus,
+ * jadi ia dikekalkan ringkas — cuma bawa info yang bantu NGO
+ * putuskan mana nak pergi dulu.
  */
 $nearbyShops = [];
 
 if ($hasLocation) {
     $distanceSql = distanceKmSql();
 
+    // Parameter dibind ikut turutan lat, lng, lat (formula
+    // Haversine guna lat NGO dua kali — dalam COS dan dalam SIN).
     $nearbyStatement = $pdo->prepare(
         "SELECT
             users.user_id,
@@ -86,6 +91,8 @@ $reservationStatement = $pdo->prepare(
 $reservationStatement->execute([$ngoId]);
 $counts = $reservationStatement->fetch();
 
+// Pratonton 7 item surplus terkini (merentasi SEMUA merchant) untuk
+// jadual "New Available Surplus".
 $newSurplusStatement = $pdo->query(
     "SELECT
         inventory.item_id,

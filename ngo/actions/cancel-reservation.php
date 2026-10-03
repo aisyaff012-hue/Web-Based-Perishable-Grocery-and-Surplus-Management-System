@@ -51,8 +51,9 @@ try {
     }
 
     /*
-     * Only untouched requests can be withdrawn. Once a merchant
-     * has approved or rejected one, the outcome stays on record.
+     * Hanya request yang masih 'pending' boleh ditarik balik.
+     * Sebaik merchant dah approve atau reject, keputusan tu
+     * kekal dalam rekod (tak boleh dibatalkan NGO lagi).
      */
     if ($reservation['status'] !== 'pending') {
         setFlash('reservation_error', 'Only pending reservations can be cancelled.');

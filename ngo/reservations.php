@@ -42,8 +42,9 @@ if ($statusFilter !== 'all') {
 }
 
 /*
- * One box searches both the merchant and the product, since an
- * NGO looking for a past request remembers one or the other.
+ * Satu kotak carian untuk cari merchant DAN produk sekali, sebab
+ * NGO yang cari request lama biasanya ingat salah satu je (nama
+ * merchant atau nama produk), bukan field mana ia disimpan.
  */
 if ($search !== '') {
     $conditions[] = '(users.business_name LIKE ? OR inventory.product_name LIKE ?)';
@@ -202,19 +203,6 @@ require __DIR__ . '/../includes/layouts/header.php';
     <?php endif; ?>
 </div>
 
-<div class="modal" id="reasonModal">
-    <div class="modal-card">
-        <h3>Reservation Rejected</h3>
-        <p class="auth-subtitle">The merchant gave the following reason.</p>
-
-        <div class="reason-box" id="reasonText"></div>
-
-        <div class="form-actions">
-            <button class="button" type="button" onclick="closeReason()">Close</button>
-        </div>
-    </div>
-</div>
-
 <div class="modal" id="cancelModal">
     <div class="modal-card">
         <h3>Cancel Reservation</h3>
@@ -233,19 +221,8 @@ require __DIR__ . '/../includes/layouts/header.php';
 </div>
 
 <script>
-    function showReason(requestId) {
-        const source = document.getElementById('reason' + requestId);
-
-        document.getElementById('reasonText').textContent =
-            source.textContent;
-
-        document.getElementById('reasonModal').classList.add('modal-open');
-    }
-
-    function closeReason() {
-        document.getElementById('reasonModal').classList.remove('modal-open');
-    }
-
+    // Isi modal confirm-cancel dengan id reservation yang diklik,
+    // baru papar modal.
     function askCancel(requestId) {
         document.getElementById('cancelRequestId').value = requestId;
         document.getElementById('cancelModal').classList.add('modal-open');
