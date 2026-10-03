@@ -1,8 +1,8 @@
 <?php
 
 /*
- * ada sound notifications kecik popup without page reload
- * (chime and toast) sound
+ * Endpoint ni dipanggil berkala (polling) dari sidebar/topbar supaya
+ * notifikasi baru (chime + toast kecil) boleh muncul tanpa reload page.
  */
 
 require_once __DIR__ . '/../includes/auth.php';
@@ -19,7 +19,7 @@ if (!isLoggedIn()) {
 
 $userId = (int) $_SESSION['user_id'];
 
-// Keeps statuses current even while the user sits on one page.
+// Pastikan status terkini walaupun user duduk lama pada satu page je.
 refreshInventoryStatus($pdo);
 
 $latestStatement = $pdo->prepare(

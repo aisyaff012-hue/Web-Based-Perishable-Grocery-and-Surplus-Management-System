@@ -45,11 +45,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $statement->fetch();
 
         if (!$user || !password_verify($password, $user['password'])) {
-            // Same message for both cases so accounts cannot be probed.
+            
+        // Mesej sama untuk kedua-dua kes, supaya orang tak boleh
+        // agak (probe) sama ada email tu wujud dalam sistem ke tidak.
+
             $errors[] = 'Invalid email or password.';
         } elseif ($user['account_status'] !== 'active') {
             $errors[] = 'This account has been suspended.';
         } else {
+          
+        // Jana session ID baru lepas login berjaya (elak session
+        // fixation), baru simpan maklumat user ke dalam session.
+
             session_regenerate_id(true);
 
             $_SESSION['user_id'] = (int) $user['user_id'];
@@ -57,6 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['role'] = $user['role'];
             $_SESSION['full_name'] = $user['full_name'];
 
+            // Nama yang dipaparkan ikut role: business_name untuk
+            // merchant, organization_name untuk NGO worker.
+            
             $_SESSION['entity_name'] = $user['role'] === 'merchant'
                 ? $user['business_name']
                 : $user['organization_name'];

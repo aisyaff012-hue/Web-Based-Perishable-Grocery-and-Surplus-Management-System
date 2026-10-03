@@ -510,6 +510,8 @@
     }
 
     .sidebar {
+        position: static;
+        height: auto;
         border-right: none;
         border-bottom: 1px solid var(--border);
     }
@@ -2994,7 +2996,7 @@ textarea {
 }
 
 .page-merchant-grid {
-    align-items: stretch;
+    align-items: start;
 }
 /* Compact surplus cards on the merchant Donations page ---- */
 

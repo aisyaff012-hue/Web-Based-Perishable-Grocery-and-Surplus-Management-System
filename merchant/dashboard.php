@@ -58,7 +58,7 @@ $recentStatement = $pdo->prepare(
      WHERE merchant_id = ?
        AND removed_at IS NULL
      ORDER BY created_at DESC
-     LIMIT 5"
+     LIMIT 7"
 );
 
 $recentStatement->execute([$merchantId]);

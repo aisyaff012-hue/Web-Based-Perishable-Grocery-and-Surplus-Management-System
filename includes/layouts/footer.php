@@ -48,11 +48,6 @@
 
     /*
      * Live notification polling.
-     *
-     * The badge is checked every few seconds. When it rises, a
-     * chime plays and a toast slides in carrying the actual
-     * notification title, so the user knows what arrived without
-     * opening anything.
      */
     (function () {
         const pollUrl = '<?= BASE_URL ?>/api/notification-count.php';

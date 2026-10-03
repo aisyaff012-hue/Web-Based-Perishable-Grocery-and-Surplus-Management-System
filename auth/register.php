@@ -93,8 +93,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         /*
-         * kalau ada 2 orang register at the same time, they receive the same ID.
-         * UNIQUE index rejects the second one, so the insert is retried with a fresh number.
+         * Kalau 2 orang register pada masa yang sama, dua-dua boleh
+         * dapat display ID yang sama. UNIQUE index akan tolak insert
+         * yang kedua, jadi kita cuba lagi dengan nombor baru.
          */
         $attempt = 0;
         $saved = false;
@@ -143,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $newUserId = (int) $pdo->lastInsertId();
 
-                // Merchants start with the default pricing rules.
+                // Merchant baru mula dengan tetapan pricing default.
                 if ($role === 'merchant') {
                     $settingsStatement = $pdo->prepare(
                         "INSERT INTO merchant_settings (merchant_id)
@@ -169,7 +170,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $pdo->rollBack();
                 }
 
-                // 23000 means a UNIQUE constraint was violated.
+                // 23000 maksudnya UNIQUE constraint kena langgar
+                // (display ID bertembung) — cuba lagi dengan nombor baru.
                 if ($exception->getCode() !== '23000') {
                     $errors[] = 'Registration failed. Please try again.';
                     break;
@@ -356,7 +358,8 @@ $businessTypes = [
 </div>
 
 <script>
-    // Shows only the fields that belong to the chosen role.
+    // Tunjuk field yang sepadan dengan role yang dipilih sahaja
+    // (business fields untuk merchant, organization field untuk NGO).
     const roleInputs = document.querySelectorAll('input[name="role"]');
     const roleFields = document.querySelectorAll('.role-fields');
     const detailsHeading = document.getElementById('detailsHeading');

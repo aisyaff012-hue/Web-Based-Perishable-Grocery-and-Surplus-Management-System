@@ -32,7 +32,6 @@ $navigation = $role === 'merchant'
         'reports'       => ['Reports', 'reports.php'],
     ];
 
-// Unread badge. The notifications table arrives on day 6.
 $unreadCount = isset($pdo)
     ? getUnreadCount($pdo, (int) $_SESSION['user_id'])
     : 0;

@@ -1,9 +1,10 @@
 <?php
 date_default_timezone_set('Asia/Kuala_Lumpur');
+
 /*
- * Single database connection used by every page.
- * Exceptions are enabled so query mistakes surface immediately
- * during development instead of failing silently.
+ * Satu sambungan database yang dikongsi oleh semua page.
+ * Exception diaktifkan supaya kesilapan query terus nampak masa
+ * development, bukan gagal senyap-senyap.
  */
 
 $host = 'localhost';
@@ -21,6 +22,9 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $username, $password, $options);
+
+    // Samakan time zone MySQL dengan PHP (+08:00) supaya pengiraan
+    // tarikh/masa (contoh baki hayat produk) tak tersasar.
     $pdo->exec("SET time_zone = '+08:00'");
 } catch (PDOException $exception) {
     exit('Database connection failed. Please start XAMPP MySQL.');
