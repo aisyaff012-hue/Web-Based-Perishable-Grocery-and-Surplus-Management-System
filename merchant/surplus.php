@@ -202,9 +202,14 @@ require __DIR__ . '/../includes/layouts/header.php';
                 // Badge kad ni BUKAN terus guna $row['status'] — ia ikut
                 // konteks tab semasa (cth tab Collected tunjuk "Collected"
                 // walaupun status DB item tu masih 'surplus').
+                // Badge ikut tab: Expired dan Available tetap ikut tab, tab lain
+                // pilih ikut keutamaan pending > reserved > collected.
                 if ($tab === 'expired') {
                     $label = 'Expired';
                     $badge = 'expired';
+                } elseif ($tab === 'available') {
+                    $label = 'Available';
+                    $badge = 'available';
                 } elseif ((int) $row['pending_count'] > 0) {
                     $label = 'Pending';
                     $badge = 'pending';

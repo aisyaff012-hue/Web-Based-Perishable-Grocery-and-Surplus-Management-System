@@ -180,7 +180,7 @@ try {
         // Kekalkan tarikh surplus asal kalau ia dah ditetapkan
         // sebelum ni (jangan reset bila item tu diedit semula).
         if (
-            $pricing['status'] === 'surplus'
+            in_array($pricing['status'], ['surplus', 'expired'], true)
             && $existing['surplus_since'] !== null
         ) {
             $surplusSince = $existing['surplus_since'];
